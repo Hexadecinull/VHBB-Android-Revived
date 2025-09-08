@@ -1,6 +1,6 @@
 # VHBB-Android Revived
-- Latest Update: 2025.08.21
-- Latest Version: stable-2
+- Latest Update: 2025.09.08
+- Latest Version: stable-2.1
 
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/SSMG4/VHBB-Android-Revived/total)
 ![GitHub Repo stars](https://img.shields.io/github/stars/SSMG4/VHBB-Android-Revived)
