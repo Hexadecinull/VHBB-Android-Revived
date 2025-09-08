@@ -9,8 +9,8 @@ android {
         minSdkVersion 21
         //noinspection OldTargetApi
         targetSdkVersion 30
-        versionCode 15
-        versionName 'stable-2'
+        versionCode 16
+        versionName 'stable-2.1'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resConfigs "en"
