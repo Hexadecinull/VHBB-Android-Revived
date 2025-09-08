@@ -35,10 +35,4 @@
         android:label="@string/menu_customrepo"
         tools:layout="@layout/fragment_customrepo" />
 
-    <fragment
-        android:id="@+id/nav_transfer"
-        android:name="ssmg.vhbb_android.ui.transfer.TransferFragment"
-        android:label="Transfer (FTP/USB)"
-        tools:layout="@layout/fragment_transfer" />
-
 </navigation>
