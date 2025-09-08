@@ -30,11 +30,6 @@
             android:icon="@drawable/ic_menu_customrepo_24dp"
             android:title="@string/menu_customrepo" />
 
-        <item
-            android:id="@+id/nav_transfer"
-            android:icon="@drawable/ic_baseline_swap_horiz_24"
-            android:title="Transfer (FTP/USB)" />
-
     </group>
 
     <group android:id="@+id/menu_group_about">
