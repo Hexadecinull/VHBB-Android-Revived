@@ -120,14 +120,33 @@ public class CBPSDBFragment extends Fragment {
     private void initializeAdapter (List<String[]> result) {
         List<String[]> dataList = new ArrayList<>();
 
+        // Find the highest CSV index used in this method
+        int maxIndex = Math.max(
+            Math.max(CBPSDB.CVS_VISIBLE, CBPSDB.CVS_TYPE),
+            Math.max(Math.max(CBPSDB.CVS_ID, CBPSDB.CVS_TITLE), Math.max(CBPSDB.CVS_CREDITS, Math.max(CBPSDB.CVS_ICON0, Math.max(CBPSDB.CVS_URL, CBPSDB.CVS_OPTIONS))))
+        );
+
         for (int i = 1; i < result.size(); i++) {
             String[] item = result.get(i);
+            // Skip rows that are too short
+            if (item.length <= maxIndex) {
+                // Optionally log: Skipping malformed line
+                continue;
+            }
 
             boolean isVisible = item[CBPSDB.CVS_VISIBLE].equals("True");
             boolean isData = item[CBPSDB.CVS_TYPE].equals(CBPSDB.TYPE_DATA);
 
             if (isVisible) {
-                mCBPSDBList.add(new CBPSDBItem(item[CBPSDB.CVS_ID], item[CBPSDB.CVS_TITLE], item[CBPSDB.CVS_CREDITS], item[CBPSDB.CVS_ICON0], item[CBPSDB.CVS_URL], item[CBPSDB.CVS_OPTIONS], item[CBPSDB.CVS_TYPE]));
+                mCBPSDBList.add(new CBPSDBItem(
+                    item[CBPSDB.CVS_ID],
+                    item[CBPSDB.CVS_TITLE],
+                    item[CBPSDB.CVS_CREDITS],
+                    item[CBPSDB.CVS_ICON0],
+                    item[CBPSDB.CVS_URL],
+                    item[CBPSDB.CVS_OPTIONS],
+                    item[CBPSDB.CVS_TYPE]
+                ));
             } else if (isData) {
                 if (item[CBPSDB.CVS_TITLE].length() > 11) {
                     dataList.add(new String[] {
@@ -168,8 +187,10 @@ public class CBPSDBFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange (String newText) {
-                mCBPSDBAdapter.getSearchFilter().filter(newText);
-                mBottomNav.setSelectedItemId(R.id.bnav_all);
+                if (mCBPSDBAdapter != null) {
+                    mCBPSDBAdapter.getSearchFilter().filter(newText);
+                    mBottomNav.setSelectedItemId(R.id.bnav_all);
+                }
                 return false;
             }
         });
