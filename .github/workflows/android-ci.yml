@@ -1,4 +1,4 @@
-name: VHBB Auto build
+name: VHBB-Android Auto Build
 
 on:
   push:
@@ -39,7 +39,7 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
 
-      - name: Upload APK (artifact)
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: VHBB-Android-Debug
