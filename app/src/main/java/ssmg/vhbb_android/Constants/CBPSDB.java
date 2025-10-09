@@ -36,7 +36,7 @@ public class CBPSDB {
 
 
     //region URL
-    public static final String CVS_URL_RAW      = "https://raw.githubusercontent.com/SSMG4/cbps-db/refs/heads/master/cbpsdb.csv";
+    public static final String CVS_URL_RAW      = "https://raw.githubusercontent.com/Team-CBPS/cbps-db/refs/heads/master/cbpsdb.csv";
     //endregion
 
 }
