@@ -1,5 +1,5 @@
 # VHBB-Android Revived
-- Latest Update: 2025.09.08
+- Latest Update: 2025.10.11
 - Latest Version: stable-2.1
 
 [![VHBB-Android Auto Build](https://github.com/SSMG4/VHBB-Android-Revived/actions/workflows/android-ci.yml/badge.svg?branch=master)](https://github.com/SSMG4/VHBB-Android-Revived/actions/workflows/android-ci.yml)
@@ -33,6 +33,10 @@ A PS Vita Homebrew Browser client for Android with great potential!
 - Android device running Android 5.0 Lolipop or higher.
 - An Internet connection.
 
+### Installing
+- You can install VHBB-Android by going to the [Releases](https://github.com/SSMG4/VHBB-Android-Revived/releases) tab and downloading the latest version
+- Or you can install the latest debug APKs of the app using [nightly.link](https://nightly.link/SSMG4/VHBB-Android-Revived/workflows/android-ci/master/VHBB-Android-Debug.zip)
+
 ### Building
 >[!WARNING]
 >The source code assumes you have the same requirements and environment as myself, SSMG4, which includes:
@@ -42,8 +46,8 @@ A PS Vita Homebrew Browser client for Android with great potential!
 >- Have Android SDK installed and located in D:
 >- Are running Windows or UNIX (preferably Windows 10-11 or for UNIX preferably Ubuntu 22.04 LTS/OS X 11-12)
 >
->If not, this tutorial will help you setup the right environment and requirements.
->The default paths of the source code are Windows paths, so please if you're using UNIX, convert them to UNIX paths.
+>If not, this tutorial will help you setup the right environment and requirements.  
+>The default paths of the source code are Windows paths, so please if you're using UNIX, convert them to UNIX paths.  
 
 #### Windows Using Gradlew.bat
 - Open **Windows Command Prompt**
