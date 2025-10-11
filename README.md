@@ -2,7 +2,7 @@
 - Latest Update: 2025.09.08
 - Latest Version: stable-2.1
 
-[![Android Build](https://github.com/SSMG4/VHBB-Android-Revived/actions/workflows/android-ci.yml/badge.svg?branch=main)](https://github.com/SSMG4/VHBB-Android-Revived/actions/workflows/android-ci.yml)
+[![VHBB-Android Auto Build](https://github.com/SSMG4/VHBB-Android-Revived/actions/workflows/android-ci.yml/badge.svg?branch=master)](https://github.com/SSMG4/VHBB-Android-Revived/actions/workflows/android-ci.yml)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/SSMG4/VHBB-Android-Revived/total)
 ![GitHub Repo stars](https://img.shields.io/github/stars/SSMG4/VHBB-Android-Revived)
 ![GitHub top language](https://img.shields.io/github/languages/top/SSMG4/VHBB-Android-Revived)
