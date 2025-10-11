@@ -1,10 +1,7 @@
 name: VHBB-Android Auto Build
 
 on:
-  push:
-    branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -28,7 +25,8 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle
+          restore-keys: |
+            ${{ runner.os }}-gradle
 
       - name: Grant execute permission for Gradlew
         run: chmod +x gradlew
@@ -42,5 +40,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: VHBB-Android-Debug
+          name: VHBB-Android
           path: app/build/outputs/apk/debug/app-debug.apk
