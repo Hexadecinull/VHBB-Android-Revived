@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion '30.0.3'
+    compileSdkVersion 36
+    buildToolsVersion '36.0.0'
 
     defaultConfig {
         applicationId "ssmg.vhbb_android"
         minSdkVersion 21
         //noinspection OldTargetApi
-        targetSdkVersion 30
+        targetSdkVersion 36
         versionCode 16
         versionName 'stable-2.1'
 

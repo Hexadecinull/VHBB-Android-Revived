@@ -1,4 +1,4 @@
-name: VHBB-Android Auto Build
+name: VHBB-Android Debug Build
 
 on:
   workflow_dispatch:
