@@ -54,7 +54,7 @@ public class CBPSDBFragment extends Fragment {
         downloadFilesTask.execute();
 
         mBottomNav = rootView.findViewById(R.id.bottom_nav);
-        mBottomNav.setOnNavigationItemSelectedListener(item -> {
+        mBottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.bnav_all) {
                 mCBPSDBAdapter.getTypeFilter().filter(CBPSDB.TYPE_ALL);

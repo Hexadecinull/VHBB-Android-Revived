@@ -1,6 +1,8 @@
 name: VHBB-Android Debug Build
 
 on:
+  push:
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -17,6 +19,9 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+
+      - name: Set Android SDK path
+        run: echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
 
       - name: Cache Gradle files
         uses: actions/cache@v4
@@ -40,5 +45,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: VHBB-Android
+          name: VHBB-Android-Debug
           path: app/build/outputs/apk/debug/app-debug.apk

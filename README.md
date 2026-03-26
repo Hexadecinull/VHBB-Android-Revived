@@ -2,11 +2,11 @@
 - Latest Update: 2026.03.26
 - Latest Version: stable-2.2
 
-[![VHBB-Android Auto Build](https://github.com/SSMG4/VHBB-Android-Revived/actions/workflows/android-ci.yml/badge.svg?branch=master)](https://github.com/SSMG4/VHBB-Android-Revived/actions/workflows/android-ci.yml)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/SSMG4/VHBB-Android-Revived/total)
-![GitHub Repo stars](https://img.shields.io/github/stars/SSMG4/VHBB-Android-Revived)
-![GitHub top language](https://img.shields.io/github/languages/top/SSMG4/VHBB-Android-Revived)
-![Issues & Submissions](https://img.shields.io/github/issues/SSMG4/VHBB-Android-Revived)
+[![VHBB-Android Auto Build](https://github.com/Hexadecinull/VHBB-Android-Revived/actions/workflows/android-ci.yml/badge.svg?branch=master)](https://github.com/Hexadecinull/VHBB-Android-Revived/actions/workflows/android-ci.yml)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Hexadecinull/VHBB-Android-Revived/total)
+![GitHub Repo stars](https://img.shields.io/github/stars/Hexadecinull/VHBB-Android-Revived)
+![GitHub top language](https://img.shields.io/github/languages/top/Hexadecinull/VHBB-Android-Revived)
+![Issues & Submissions](https://img.shields.io/github/issues/Hexadecinull/VHBB-Android-Revived)
 
 *(Please dont hesitate to open issues or pull requests if anything is wrong, id be happy to help fix them!)*
 
@@ -34,16 +34,16 @@ A PS Vita Homebrew Browser client for Android with great potential!
 - An Internet connection.
 
 ### Installing
-- You can install VHBB-Android by going to the [Releases](https://github.com/SSMG4/VHBB-Android-Revived/releases) tab and downloading the latest version
-- Or you can install the latest debug APKs of the app using [nightly.link](https://nightly.link/SSMG4/VHBB-Android-Revived/workflows/android-ci/master/VHBB-Android-Debug.zip)
+- You can install VHBB-Android by going to the [Releases](https://github.com/Hexadecinull/VHBB-Android-Revived/releases) tab and downloading the latest version
+- Or you can install the latest debug APKs of the app using [nightly.link](https://nightly.link/Hexadecinull/VHBB-Android-Revived/workflows/android-ci/master/VHBB-Android-Debug.zip)
 
 ### Building
 >[!WARNING]
 >The source code assumes you have the same requirements and environment as myself, SSMG4, which includes:
->- Eclispe Adotium's JDK 17 (Or ideally any JDK 17 environments)
->- Gradle 7.6.4 (automatically installed by Gradlew.bat or Android Studio)
+>- Eclipse Adoptium's JDK 17 (Or ideally any JDK 17 environment)
+>- Gradle 8.11.1 (automatically installed by Gradlew.bat or Android Studio)
 >- 4-6GB RAM minimum
->- Have Android SDK installed and located in D:
+>- Have Android SDK installed and located in D:\
 >- Are running Windows or UNIX (preferably Windows 10-11 or for UNIX preferably Ubuntu 22.04 LTS/OS X 11-12)
 >
 >If not, this tutorial will help you setup the right environment and requirements.  
@@ -52,7 +52,7 @@ A PS Vita Homebrew Browser client for Android with great potential!
 #### Windows Using Gradlew.bat
 - Open **Windows Command Prompt**
 - Clone the repository using Git:
-```git clone https://github.com/SSMG4/VHBB-Android-Revived.git```
+```git clone https://github.com/Hexadecinull/VHBB-Android-Revived.git```
 - Open File Explorer
 - Navigate to the folder where `\VHBB-Android-Revived\` is located
 - Open the file ```local.properties```
@@ -67,7 +67,7 @@ A PS Vita Homebrew Browser client for Android with great potential!
 - Wait for it to compile and say:
 ```bash
 BUILD SUCCESSFUL in 50s // The time depends on your environment.
-28 actionable tasks: 28 executed
+32 actionable tasks: 32 executed
 ```
 - Once done, the APK generated should be outputed to: ```...\VHBB-Android-Revived-master\app\build\outputs\apk\debug```
 - You can now transfer this APK to your phone and install the app!
@@ -75,7 +75,7 @@ BUILD SUCCESSFUL in 50s // The time depends on your environment.
 #### UNIX Using Gradlew
 - Open your **Terminal**
 - Clone the repository using Git: 
-```git clone https://github.com/SSMG4/VHBB-Android-Revived.git```
+```git clone https://github.com/Hexadecinull/VHBB-Android-Revived.git```
 - Navigate to the project folder: 
 ```cd VHBB-Android-Revived```
 - Open the file `local.properties` with your preferred editor (e.g. nano, vim, or VS Code):
@@ -98,7 +98,7 @@ BUILD SUCCESSFUL in 50s // The time depends on your environment.
 - Wait for the build to complete. If successful, you should see something like:
 ```bash
 BUILD SUCCESSFUL in 50s // time depends on your environment
-28 actionable tasks: 28 executed
+32 actionable tasks: 32 executed
 ```
 - The compiled APK will be located in:
 ```.../VHBB-Android-Revived/app/build/outputs/apk/debug/```
@@ -115,5 +115,5 @@ BUILD SUCCESSFUL in 50s // time depends on your environment
 
 ### Credits
 - [Electric1447](https://github.com/Electric1447) - For creating the project
-- [SSMG4](https://github.com/SSMG4) - For reviving the project
+- [SSMG4](https://github.com/SSMG4) / [Hexadecinull](https://github.com/Hexadecinull) - For reviving the project
 - [Original Project](https://github.com/Electric1447/VHBB-Android)
