@@ -1,6 +1,7 @@
 package ssmg.vhbb_android.ui.cbpsdb;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -102,6 +104,12 @@ public class CBPSDBAdapter extends RecyclerView.Adapter<CBPSDBAdapter.ViewHolder
 
             DownloadUtils.VHBBDownloadManager(mActivity, v.getContext(), Uri.parse(dataUrlID), filename);
         });
+
+        holder.mContainer.setOnClickListener(v -> {
+            Intent detailsIntent = new Intent(mActivity, CBPSDBDetails.class);
+            detailsIntent.putExtra("ITEM", currentItem);
+            mActivity.startActivity(detailsIntent);
+        });
     }
 
     @Override
@@ -113,6 +121,7 @@ public class CBPSDBAdapter extends RecyclerView.Adapter<CBPSDBAdapter.ViewHolder
         public TextView mTitle, mAuthor, mType;
         public ImageButton mDownload, mDownloadData;
         public ImageView mIcon;
+        public LinearLayout mContainer;
 
         public ViewHolder (View itemView) {
             super(itemView);
@@ -122,6 +131,7 @@ public class CBPSDBAdapter extends RecyclerView.Adapter<CBPSDBAdapter.ViewHolder
             mDownload = itemView.findViewById(R.id.download);
             mDownloadData = itemView.findViewById(R.id.downloadData);
             mIcon = itemView.findViewById(R.id.image);
+            mContainer = itemView.findViewById(R.id.ll_main);
         }
     }
 

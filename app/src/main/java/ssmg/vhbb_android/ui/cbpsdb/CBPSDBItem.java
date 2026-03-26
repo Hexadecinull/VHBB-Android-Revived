@@ -1,8 +1,12 @@
 package ssmg.vhbb_android.ui.cbpsdb;
 
+import java.io.Serializable;
+
 import ssmg.vhbb_android.Constants.CBPSDB;
 
-public class CBPSDBItem {
+public class CBPSDBItem implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String ID;
     private final String Name;

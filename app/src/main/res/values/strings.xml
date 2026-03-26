@@ -31,6 +31,7 @@
     <string name="details_source">Source Page</string>
     <string name="details_release">Release Page</string>
     <string name="details_desc">Description:</string>
+    <string name="details_options">Options:</string>
 
     <string name="customrepo_refresh_title">Please enter a valid repo URL.</string>
     <string name="customrepo_refresh">Refresh</string>
