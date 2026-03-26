@@ -53,7 +53,7 @@ public class HomebrewFragment extends Fragment {
     jsonParse();
 
     mBottomNav = rootView.findViewById(R.id.bottom_nav);
-    mBottomNav.setOnNavigationItemSelectedListener(item -> {
+    mBottomNav.setOnItemSelectedListener(item -> {
         if (mHomebrewAdapter == null) {
             // The adapter is not yet initialized, so do nothing.
             return false;
