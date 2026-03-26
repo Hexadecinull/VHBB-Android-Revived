@@ -1,6 +1,6 @@
 # VHBB-Android Revived
-- Latest Update: 2025.10.11
-- Latest Version: stable-2.1
+- Latest Update: 2026.03.26
+- Latest Version: stable-2.2
 
 [![VHBB-Android Auto Build](https://github.com/SSMG4/VHBB-Android-Revived/actions/workflows/android-ci.yml/badge.svg?branch=master)](https://github.com/SSMG4/VHBB-Android-Revived/actions/workflows/android-ci.yml)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/SSMG4/VHBB-Android-Revived/total)

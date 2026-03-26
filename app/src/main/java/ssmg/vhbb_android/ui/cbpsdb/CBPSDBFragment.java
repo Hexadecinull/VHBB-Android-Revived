@@ -55,16 +55,16 @@ public class CBPSDBFragment extends Fragment {
 
         mBottomNav = rootView.findViewById(R.id.bottom_nav);
         mBottomNav.setOnNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.bnav_all:
-                    mCBPSDBAdapter.getTypeFilter().filter(CBPSDB.TYPE_ALL);
-                    return true;
-                case R.id.bnav_homebrew:
-                    mCBPSDBAdapter.getTypeFilter().filter(CBPSDB.TYPE_VPK);
-                    return true;
-                case R.id.bnav_plugins:
-                    mCBPSDBAdapter.getTypeFilter().filter(CBPSDB.TYPE_PLUGIN);
-                    return true;
+            int id = item.getItemId();
+            if (id == R.id.bnav_all) {
+                mCBPSDBAdapter.getTypeFilter().filter(CBPSDB.TYPE_ALL);
+                return true;
+            } else if (id == R.id.bnav_homebrew) {
+                mCBPSDBAdapter.getTypeFilter().filter(CBPSDB.TYPE_VPK);
+                return true;
+            } else if (id == R.id.bnav_plugins) {
+                mCBPSDBAdapter.getTypeFilter().filter(CBPSDB.TYPE_PLUGIN);
+                return true;
             }
             return false;
         });

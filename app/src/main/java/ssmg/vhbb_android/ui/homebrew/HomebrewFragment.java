@@ -59,24 +59,24 @@ public class HomebrewFragment extends Fragment {
             return false;
         }
 
-        switch (item.getItemId()) {
-            case R.id.bnav_all:
+        int id = item.getItemId();
+        if (id == R.id.bnav_all) {
                 mHomebrewAdapter.getTypeFilter().filter(String.valueOf(VitaDB.TYPE_ALL));
                 return true;
-            case R.id.bnav_original_games:
+            } else if (id == R.id.bnav_original_games) {
                 mHomebrewAdapter.getTypeFilter().filter(String.valueOf(VitaDB.TYPE_ORIGINAL_GAMES));
                 return true;
-            case R.id.bnav_game_ports:
+            } else if (id == R.id.bnav_game_ports) {
                 mHomebrewAdapter.getTypeFilter().filter(String.valueOf(VitaDB.TYPE_GAME_PORTS));
                 return true;
-            case R.id.bnav_utilities:
+            } else if (id == R.id.bnav_utilities) {
                 mHomebrewAdapter.getTypeFilter().filter(String.valueOf(VitaDB.TYPE_UTILISES));
                 return true;
-            case R.id.bnav_emulators:
+            } else if (id == R.id.bnav_emulators) {
                 mHomebrewAdapter.getTypeFilter().filter(String.valueOf(VitaDB.TYPE_EMULATORS));
                 return true;
-        }
-        return false;
+            }
+            return false;
     });
 
     return rootView;
