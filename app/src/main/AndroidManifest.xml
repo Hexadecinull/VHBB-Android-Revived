@@ -47,6 +47,11 @@
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".ui.FullscreenImageActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

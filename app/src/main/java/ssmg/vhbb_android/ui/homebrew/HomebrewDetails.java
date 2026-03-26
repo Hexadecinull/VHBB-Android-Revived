@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import ssmg.vhbb_android.R;
 import ssmg.vhbb_android.Utils.DownloadUtils;
+import ssmg.vhbb_android.ui.FullscreenImageActivity;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class HomebrewDetails extends AppCompatActivity {
@@ -80,6 +81,16 @@ public class HomebrewDetails extends AppCompatActivity {
             if (ScreenshotsUrl.length == 1) Picasso.get().load(ScreenshotsUrl[0]).fit().centerInside().memoryPolicy(MemoryPolicy.NO_CACHE).into(mScreenshot);
             else cycleHandler.postDelayed(cycleRunnable, 0);
         else mScreenshot.setVisibility(View.GONE);
+
+        if (ScreenshotsUrl != null) {
+            mScreenshot.setOnClickListener(v -> {
+                cycleHandler.removeCallbacks(cycleRunnable);
+                Intent fullscreenIntent = new Intent(this, FullscreenImageActivity.class);
+                fullscreenIntent.putExtra("URLS", ScreenshotsUrl);
+                fullscreenIntent.putExtra("INDEX", sc_index == 0 ? 0 : sc_index - 1);
+                startActivity(fullscreenIntent);
+            });
+        }
     }
 
     private void cycleScreenshot () {
