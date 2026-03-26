@@ -11,6 +11,7 @@
 
     <string name="menu_homebrew">Homebrew</string>
     <string name="menu_homebrew_vitadb">VitaDB</string>
+    <string name="menu_psp">PSP Homebrew</string>
     <string name="menu_plugins">Plugins</string>
     <string name="menu_cbpsdb">CBPS-DB</string>
     <string name="menu_extras">Extras</string>

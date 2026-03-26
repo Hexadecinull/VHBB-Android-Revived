@@ -11,6 +11,11 @@
             android:title="@string/menu_homebrew_vitadb" />
 
         <item
+            android:id="@+id/nav_psp"
+            android:icon="@drawable/ic_menu_playstation_24dp"
+            android:title="@string/menu_psp" />
+
+        <item
             android:id="@+id/nav_plugins"
             android:icon="@drawable/ic_menu_plugins_24dp"
             android:title="@string/menu_plugins" />

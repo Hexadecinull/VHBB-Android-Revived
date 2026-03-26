@@ -37,6 +37,11 @@
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".ui.psp.PSPDetails"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

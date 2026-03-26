@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_homebrew" />
 
     <fragment
+        android:id="@+id/nav_psp"
+        android:name="ssmg.vhbb_android.ui.psp.PSPFragment"
+        android:label="@string/menu_psp"
+        tools:layout="@layout/fragment_psp" />
+
+    <fragment
         android:id="@+id/nav_plugins"
         android:name="ssmg.vhbb_android.ui.plugins.PluginsFragment"
         android:label="@string/menu_plugins"
