@@ -16,6 +16,7 @@
     <string name="menu_cbpsdb">CBPS-DB</string>
     <string name="menu_extras">Extras</string>
     <string name="menu_customrepo">Custom Repo</string>
+    <string name="menu_transfer">Transfer to Vita</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_vitadb">Visit VitaDB</string>
     <string name="menu_source_code">Source Code</string>
@@ -49,8 +50,6 @@
     <string name="about">About</string>
     <string name="downloading">Downloading…</string>
 
-    <string name="menu_transfer">Transfer to Vita</string>
-
     <string name="transfer_tab_ftp">FTP</string>
     <string name="transfer_tab_usb">USB</string>
     <string name="transfer_ftp_hint">Make sure VitaShell is open on your Vita with FTP enabled (press SELECT). Enter the IP shown on screen.</string>
@@ -71,27 +70,4 @@
 
     <string name="permutils_title">Permission needed</string>
     <string name="permutils_message">Storage permission is needed to download files</string>
-
-    <string name="transfer_ftp_title">FTP Transfer</string>
-    <string name="transfer_usb_title">USB / OTG Transfer</string>
-    <string name="transfer_ftp_hint">Open VitaShell, press SELECT to start FTP, then enter the IP shown on your Vita.</string>
-    <string name="transfer_usb_hint">Connect your PS Vita via OTG cable with VitaShell open in USB mode, then pick your file and destination folder on the Vita.</string>
-    <string name="transfer_ftp_ip_hint">Vita IP address (e.g. 192.168.1.x)</string>
-    <string name="transfer_ftp_path_hint">Remote path (e.g. /ux0:data/)</string>
-    <string name="transfer_pick_file">Pick File</string>
-    <string name="transfer_no_file_selected">No file selected</string>
-    <string name="transfer_no_file">Please select a file first</string>
-    <string name="transfer_ftp_no_ip">Please enter the Vita\'s IP address</string>
-    <string name="transfer_ftp_failed">Transfer failed — check that VitaShell FTP is active</string>
-    <string name="transfer_usb_no_write">Cannot write to selected destination</string>
-    <string name="transfer_send">Send to PS Vita</string>
-    <string name="transfer_connecting">Connecting…</string>
-    <string name="transfer_uploading">Uploading…</string>
-    <string name="transfer_success">Transfer complete!</string>
-    <string name="transfer_error">Error: %1$s</string>
-    <string name="transfer_vita_connected">PS Vita detected</string>
-    <string name="transfer_vita_not_connected">No PS Vita detected</string>
-    <string name="transfer_usb_pick_dest">Pick Destination</string>
-    <string name="transfer_usb_no_dest">No destination selected</string>
-    <string name="menu_transfer">Transfer to Vita</string>
 </resources>
