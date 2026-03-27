@@ -35,9 +35,18 @@
             android:icon="@drawable/ic_menu_customrepo_24dp"
             android:title="@string/menu_customrepo" />
 
+        <item
+            android:id="@+id/nav_transfer"
+            android:icon="@drawable/ic_cloud_circle_24dp"
+            android:title="@string/menu_transfer" />
+
     </group>
 
     <group android:id="@+id/menu_group_about">
+
+        <item
+            android:id="@+id/nav_transfer"
+            android:title="@string/menu_transfer" />
 
         <item
             android:id="@+id/nav_settings"
