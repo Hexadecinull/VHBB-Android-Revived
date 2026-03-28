@@ -51,8 +51,6 @@ jobs:
   release:
     name: Release Build
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
-    needs: debug
 
     steps:
       - name: Checkout repository
