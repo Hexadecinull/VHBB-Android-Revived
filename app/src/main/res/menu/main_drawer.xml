@@ -12,7 +12,7 @@
 
         <item
             android:id="@+id/nav_psp"
-            android:icon="@drawable/ic_menu_playstation_24dp"
+            android:icon="@drawable/ic_menu_psp_24dp"
             android:title="@string/menu_psp" />
 
         <item
@@ -43,6 +43,10 @@
     </group>
 
     <group android:id="@+id/menu_group_about">
+
+        <item
+            android:id="@+id/nav_transfer"
+            android:title="@string/menu_transfer" />
 
         <item
             android:id="@+id/nav_settings"

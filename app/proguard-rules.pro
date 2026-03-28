@@ -3,6 +3,10 @@
 
 -keep class ssmg.vhbb_android.** { *; }
 
+-keep class androidx.navigation.** { *; }
+-keep class androidx.navigation.fragment.** { *; }
+-keepnames @androidx.navigation.Navigator.Name class *
+
 -dontwarn org.apache.commons.net.**
 -keep class org.apache.commons.net.** { *; }
 
@@ -15,7 +19,7 @@
 -dontwarn javax.annotation.**
 -dontwarn org.conscrypt.**
 
--keepnames class * implements java.io.Serializable { void <init>(); }
+-keepnames class * implements java.io.Serializable
 -keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
     private static final java.io.ObjectStreamField[] serialPersistentFields;

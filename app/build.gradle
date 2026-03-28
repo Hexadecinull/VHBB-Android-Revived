@@ -45,7 +45,7 @@ android {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += ['-Xlint:-deprecation', '-Xlint:-unchecked']
+    options.compilerArgs += ['-Xlint:none', '-nowarn']
 }
 
 dependencies {

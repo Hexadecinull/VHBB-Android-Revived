@@ -11,6 +11,8 @@ public class CBPSDB {
     public static final int CVS_CREDITS         = 2;
     public static final int CVS_ICON0           = 3;
     public static final int CVS_URL             = 5;
+    public static final int CVS_README          = 7;
+    public static final int CVS_SOURCE          = 9;
     public static final int CVS_TIME_ADDED      = 11;
     public static final int CVS_OPTIONS         = 13;
     public static final int CVS_TYPE            = 14;

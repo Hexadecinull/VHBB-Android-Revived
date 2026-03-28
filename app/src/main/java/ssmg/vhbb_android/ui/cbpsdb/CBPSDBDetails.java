@@ -1,8 +1,10 @@
 package ssmg.vhbb_android.ui.cbpsdb;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,11 +34,23 @@ public class CBPSDBDetails extends AppCompatActivity {
         String urlID = cItem.getUrl();
         String dataUrlID = cItem.getDataUrl();
         String typeID = cItem.getType();
+        String readmeUrl = cItem.getReadmeUrl();
+        String sourceUrl = cItem.getSourceUrl();
 
         ((TextView) findViewById(R.id.textview_title)).setText(cItem.getName());
         ((TextView) findViewById(R.id.textview_author)).setText(cItem.getAuthor());
         ((TextView) findViewById(R.id.textview_type)).setText(cItem.getTypeString());
-        ((TextView) findViewById(R.id.textview_options)).setText(cItem.getOptions());
+
+        TextView optionsLabel = findViewById(R.id.textview_options_label);
+        TextView optionsValue = findViewById(R.id.textview_options);
+        View optionsSection = findViewById(R.id.ll_options);
+
+        if (typeID.equals(CBPSDB.TYPE_PLUGIN)) {
+            optionsSection.setVisibility(View.VISIBLE);
+            optionsValue.setText(cItem.getOptions());
+        } else {
+            optionsSection.setVisibility(View.GONE);
+        }
 
         if (iconID.equals("None")) {
             if (typeID.equals(CBPSDB.TYPE_PLUGIN)) {
@@ -53,6 +67,22 @@ public class CBPSDBDetails extends AppCompatActivity {
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into((ImageView) findViewById(R.id.image));
         }
+
+        Button mReadmeBtn = findViewById(R.id.button_readme);
+        Button mSourceBtn = findViewById(R.id.button_source);
+        View linksSection = findViewById(R.id.ll_links);
+        View lineLinks = findViewById(R.id.line_links);
+
+        boolean hasReadme = !readmeUrl.isEmpty();
+        boolean hasSource = !sourceUrl.isEmpty();
+
+        mReadmeBtn.setVisibility(hasReadme ? View.VISIBLE : View.GONE);
+        mSourceBtn.setVisibility(hasSource ? View.VISIBLE : View.GONE);
+        linksSection.setVisibility((hasReadme || hasSource) ? View.VISIBLE : View.GONE);
+        lineLinks.setVisibility((hasReadme || hasSource) ? View.VISIBLE : View.GONE);
+
+        if (hasReadme) mReadmeBtn.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(readmeUrl))));
+        if (hasSource) mSourceBtn.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(sourceUrl))));
 
         ImageButton mDownload = findViewById(R.id.download);
         ImageButton mDownloadData = findViewById(R.id.downloadData);

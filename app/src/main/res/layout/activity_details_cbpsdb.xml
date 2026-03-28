@@ -131,6 +131,7 @@
                     android:paddingBottom="8dp">
 
                     <TextView
+                        android:id="@+id/textview_options_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
@@ -146,6 +147,46 @@
                         android:layout_gravity="bottom"
                         android:textColor="@color/textColorTitle"
                         android:textSize="@dimen/text_details_item" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/line_links"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_below="@id/ll_options"
+                    android:background="@color/colorBackground" />
+
+                <LinearLayout
+                    android:id="@+id/ll_links"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/line_links"
+                    android:orientation="horizontal"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="8dp">
+
+                    <Button
+                        android:id="@+id/button_readme"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/details_readme" />
+
+                    <Button
+                        android:id="@+id/button_source"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/details_source" />
 
                 </LinearLayout>
 

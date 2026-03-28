@@ -101,4 +101,17 @@ public class HomebrewDetails extends AppCompatActivity {
         sc_index++;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ScreenshotsUrl != null && ScreenshotsUrl.length > 1)
+            cycleHandler.postDelayed(cycleRunnable, 5000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cycleHandler.removeCallbacks(cycleRunnable);
+    }
+
 }

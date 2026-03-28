@@ -15,15 +15,19 @@ public class CBPSDBItem implements Serializable {
     private final String Url;
     private final String Options;
     private final String Type;
+    private final String ReadmeUrl;
+    private final String SourceUrl;
     private String DataUrl = "None";
 
-    public CBPSDBItem (String id, String name, String author, String icon0, String url, String options, String type) {
+    public CBPSDBItem (String id, String name, String author, String icon0, String url, String options, String type, String readmeUrl, String sourceUrl) {
         this.ID = id;
         this.Name = name;
         this.Author = author;
         this.Icon0 = icon0;
         this.Url = url;
         this.Type = type;
+        this.ReadmeUrl = readmeUrl.equals("None") ? "" : readmeUrl;
+        this.SourceUrl = sourceUrl.equals("None") ? "" : sourceUrl;
 
         if (options.equals("None"))
             this.Options = CBPSDB.OPTIONS_NONE;
@@ -84,6 +88,14 @@ public class CBPSDBItem implements Serializable {
 
     public void setDataUrl (String dataUrl) {
         DataUrl = dataUrl;
+    }
+
+    public String getReadmeUrl () {
+        return ReadmeUrl;
+    }
+
+    public String getSourceUrl () {
+        return SourceUrl;
     }
 
 }

@@ -63,6 +63,16 @@ public class PSPItem extends BaseItem {
         return Type;
     }
 
+    public String getTypeString() {
+        switch (Type) {
+            case 1: return "Original Game";
+            case 2: return "Game Port";
+            case 4: return "Utility";
+            case 5: return "Emulator";
+            default: return "";
+        }
+    }
+
     public int getID() {
         return ID;
     }

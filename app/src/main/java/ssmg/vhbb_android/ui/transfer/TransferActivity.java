@@ -16,6 +16,7 @@ import android.provider.DocumentsContract;
 import android.provider.OpenableColumns;
 import android.database.Cursor;
 import android.view.View;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.documentfile.provider.DocumentFile;
 
 import org.apache.commons.net.ftp.FTP;
@@ -33,6 +35,8 @@ import org.apache.commons.net.ftp.FTPClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -45,7 +49,7 @@ public class TransferActivity extends AppCompatActivity {
     private static final int FTP_PORT        = 1337;
     private static final String DEFAULT_REMOTE_PATH = "/ux0:data/";
 
-    private Uri mSelectedFileUriFtp;
+    private List<Uri> mSelectedFileUrisFtp = new ArrayList<>();
     private Uri mSelectedFileUriUsb;
     private Uri mUsbDestDirUri;
     private String mSelectedFileNameFtp = "";
@@ -71,11 +75,15 @@ public class TransferActivity extends AppCompatActivity {
     private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     private final ActivityResultLauncher<String> mFtpFilePicker =
-            registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-                if (uri != null) {
-                    mSelectedFileUriFtp = uri;
-                    mSelectedFileNameFtp = resolveFileName(uri);
-                    mFtpFileLabel.setText(mSelectedFileNameFtp);
+            registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
+                if (uris != null && !uris.isEmpty()) {
+                    mSelectedFileUrisFtp = new ArrayList<>(uris);
+                    if (uris.size() == 1) {
+                        mSelectedFileNameFtp = resolveFileName(uris.get(0));
+                        mFtpFileLabel.setText(mSelectedFileNameFtp);
+                    } else {
+                        mFtpFileLabel.setText(uris.size() + " files selected");
+                    }
                 }
             });
 
@@ -115,6 +123,10 @@ public class TransferActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfer);
 
+        Toolbar toolbar = findViewById(R.id.toolbar_transfer);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mFtpIpInput       = findViewById(R.id.ftp_ip_input);
         mFtpRemotePath    = findViewById(R.id.ftp_remote_path);
         mFtpFileLabel     = findViewById(R.id.ftp_file_label);
@@ -151,6 +163,15 @@ public class TransferActivity extends AppCompatActivity {
 
         updateUsbConnectionStatus();
         updateUsbTransferButton();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -222,7 +243,7 @@ public class TransferActivity extends AppCompatActivity {
             mFtpStatus.setText(R.string.transfer_ftp_no_ip);
             return;
         }
-        if (mSelectedFileUriFtp == null) {
+        if (mSelectedFileUrisFtp.isEmpty()) {
             mFtpStatus.setText(R.string.transfer_no_file);
             return;
         }
@@ -231,8 +252,8 @@ public class TransferActivity extends AppCompatActivity {
         if (remotePath.isEmpty()) remotePath = DEFAULT_REMOTE_PATH;
         if (!remotePath.endsWith("/")) remotePath += "/";
 
-        String finalRemotePath = remotePath + mSelectedFileNameFtp;
-        Uri fileUri = mSelectedFileUriFtp;
+        final String finalRemotePath = remotePath;
+        final List<Uri> fileUris = new ArrayList<>(mSelectedFileUrisFtp);
 
         setFtpUiTransferring(true);
         mFtpStatus.setText(R.string.transfer_connecting);
@@ -247,14 +268,25 @@ public class TransferActivity extends AppCompatActivity {
 
                 mHandler.post(() -> mFtpStatus.setText(R.string.transfer_uploading));
 
-                InputStream is = getContentResolver().openInputStream(fileUri);
-                boolean success = ftp.storeFile(finalRemotePath, is);
-                if (is != null) is.close();
+                int total = fileUris.size();
+                int done = 0;
+                boolean allSuccess = true;
+
+                for (Uri fileUri : fileUris) {
+                    String fileName = resolveFileName(fileUri);
+                    InputStream is = getContentResolver().openInputStream(fileUri);
+                    boolean success = ftp.storeFile(finalRemotePath + fileName, is);
+                    if (is != null) is.close();
+                    if (!success) allSuccess = false;
+                    done++;
+                    final int doneF = done;
+                    mHandler.post(() -> mFtpStatus.setText(getString(R.string.transfer_uploading) + " " + doneF + "/" + total));
+                }
 
                 ftp.logout();
                 ftp.disconnect();
 
-                boolean finalSuccess = success;
+                boolean finalSuccess = allSuccess;
                 mHandler.post(() -> {
                     setFtpUiTransferring(false);
                     mFtpStatus.setText(finalSuccess

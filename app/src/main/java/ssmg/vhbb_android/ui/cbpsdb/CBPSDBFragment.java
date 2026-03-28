@@ -145,7 +145,9 @@ public class CBPSDBFragment extends Fragment {
                     item[CBPSDB.CVS_ICON0],
                     item[CBPSDB.CVS_URL],
                     item[CBPSDB.CVS_OPTIONS],
-                    item[CBPSDB.CVS_TYPE]
+                    item[CBPSDB.CVS_TYPE],
+                    item[CBPSDB.CVS_README],
+                    item[CBPSDB.CVS_SOURCE]
                 ));
             } else if (isData) {
                 if (item[CBPSDB.CVS_TITLE].length() > 11) {
