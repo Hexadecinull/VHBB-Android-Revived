@@ -12,7 +12,10 @@
 
 -dontwarn com.android.volley.**
 
--keepnames class * implements java.io.Serializable
+-dontwarn javax.annotation.**
+-dontwarn org.conscrypt.**
+
+-keepnames class * implements java.io.Serializable { void <init>(); }
 -keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
     private static final java.io.ObjectStreamField[] serialPersistentFields;
