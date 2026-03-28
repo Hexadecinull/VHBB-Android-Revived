@@ -1,6 +1,6 @@
 # VHBB-Android Revived
 - Latest Update: 2026.03.26
-- Latest Version: stable-2.2
+- Latest Version: stable-3.0
 
 [![VHBB-Android Auto Build](https://github.com/Hexadecinull/VHBB-Android-Revived/actions/workflows/android-ci.yml/badge.svg?branch=master)](https://github.com/Hexadecinull/VHBB-Android-Revived/actions/workflows/android-ci.yml)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Hexadecinull/VHBB-Android-Revived/total)
@@ -20,17 +20,20 @@ A PS Vita Homebrew Browser client for Android with great potential!
 
 ### Features
 - VitaDB page containing all its homebrews.
+- PSP Homebrew browser powered by VitaDB's PSP database.
 - Custom plugin database containing over 95% of all the PS Vita plugins.
-- CBPS-DB page containing all its homebrews & plugins.
+- CBPS-DB page containing all its homebrews & plugins, with a full details page per entry.
 - Custom Extras page featuring some cool extras for your PS Vita/PS TV.
 - Download homebrews & plugins to your Android device.
+- Transfer downloaded files directly to your PS Vita via FTP (VitaShell) or USB OTG.
 - Search for homebrews & plugins.
 - Custom repository support.
+- Fullscreen screenshot viewer with left/right navigation on item detail pages.
 - Feature to clear cache by pressing a button.
 - Choose a custom download location if needed.
 
 ### Requirements
-- Android device running Android 5.0 Lolipop or higher.
+- Android device running Android 5.0 Lollipop or higher.
 - An Internet connection.
 
 ### Installing
@@ -47,7 +50,11 @@ A PS Vita Homebrew Browser client for Android with great potential!
 >- Are running Windows or UNIX (preferably Windows 10-11 or for UNIX preferably Ubuntu 22.04 LTS/OS X 11-12)
 >
 >If not, this tutorial will help you setup the right environment and requirements.  
->The default paths of the source code are Windows paths, so please if you're using UNIX, convert them to UNIX paths.  
+>The default paths of the source code are Windows paths, so please if you're using UNIX, convert them to UNIX paths.
+
+>[!NOTE]
+>To build a signed release APK yourself, you will need your own keystore. Set the following environment variables before running `assembleRelease`:
+>`KEYSTORE_PATH`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`
 
 #### Windows Using Gradlew.bat
 - Open **Windows Command Prompt**
@@ -112,6 +119,8 @@ BUILD SUCCESSFUL in 50s // time depends on your environment
 
 ### Notes
 - If a new update to the extras or the plugins page is up, its best that you wait for the app to fetch it while can take about 1-5 minutes.
+- FTP transfer requires VitaShell to be open on your PS Vita with FTP enabled (press SELECT).
+- USB detection identifies your PS Vita via its USB vendor/product ID. Direct file transfer over USB is not supported due to Sony's proprietary VitaMTP protocol.
 
 ### Credits
 - [Electric1447](https://github.com/Electric1447) - For creating the project

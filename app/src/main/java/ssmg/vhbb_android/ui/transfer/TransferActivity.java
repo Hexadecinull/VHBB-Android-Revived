@@ -143,7 +143,11 @@ public class TransferActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
-        registerReceiver(mUsbReceiver, filter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(mUsbReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mUsbReceiver, filter);
+        }
 
         updateUsbConnectionStatus();
         updateUsbTransferButton();
@@ -168,9 +172,10 @@ public class TransferActivity extends AppCompatActivity {
 
     private void updateUsbConnectionStatus() {
         boolean connected = isVitaConnected();
-        mUsbConnectionStatus.setText(connected
+        String statusText = connected
                 ? getString(R.string.transfer_vita_connected)
-                : getString(R.string.transfer_vita_not_connected));
+                : getString(R.string.transfer_vita_not_connected);
+        mUsbConnectionStatus.setText(statusText);
         mUsbConnectionIcon.setImageResource(connected
                 ? R.drawable.ic_usb_connected
                 : R.drawable.ic_usb_disconnected);

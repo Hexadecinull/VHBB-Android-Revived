@@ -51,22 +51,36 @@
     <string name="downloading">Downloading…</string>
 
     <string name="transfer_tab_ftp">FTP</string>
-    <string name="transfer_tab_usb">USB</string>
-    <string name="transfer_ftp_hint">Make sure VitaShell is open on your Vita with FTP enabled (press SELECT). Enter the IP shown on screen.</string>
+    <string name="transfer_tab_usb">USB / OTG</string>
+    <string name="transfer_ftp_title">FTP Transfer</string>
+    <string name="transfer_usb_title">USB / OTG Transfer</string>
+    <string name="transfer_ftp_hint">Open VitaShell on your PS Vita and press SELECT to start the FTP server. Enter the IP address shown on screen below.</string>
+    <string name="transfer_usb_hint">Connect your PS Vita via OTG cable with VitaShell open, then select a file and a destination folder on your Vita.</string>
     <string name="transfer_ip_label">PS Vita IP Address</string>
-    <string name="transfer_file_label">File to transfer (from Downloads)</string>
+    <string name="transfer_ftp_ip_hint">192.168.1.x</string>
+    <string name="transfer_ftp_path_label">Remote path on Vita</string>
+    <string name="transfer_ftp_path_hint">/ux0:data/</string>
+    <string name="transfer_file_label">File to transfer</string>
+    <string name="transfer_usb_dest_label">Destination folder on Vita</string>
+    <string name="transfer_pick_file">Pick File</string>
+    <string name="transfer_usb_pick_dest">Pick Folder</string>
+    <string name="transfer_no_file_selected">No file selected</string>
+    <string name="transfer_no_dest_selected">No destination selected</string>
     <string name="transfer_send_btn">Send to PS Vita</string>
-    <string name="transfer_no_files">No compatible files found in Downloads</string>
-    <string name="transfer_enter_ip">Please enter the PS Vita IP address</string>
-    <string name="transfer_success">Transfer complete!</string>
-    <string name="transfer_error">Transfer failed:</string>
+    <string name="transfer_send">Send to PS Vita</string>
 
-    <string name="usb_detection_label">PS Vita detection (via USB OTG)</string>
-    <string name="usb_vita_detected">✓ PS Vita detected</string>
-    <string name="usb_vita_not_detected">No PS Vita detected</string>
-    <string name="usb_refresh_btn">Refresh</string>
-    <string name="usb_hint_title">PS Vita connected!</string>
-    <string name="usb_hint_body">Your PS Vita is connected via USB. To transfer files, switch to the FTP tab and use VitaShell\'s FTP mode over Wi-Fi. Direct USB file transfer requires Sony\'s proprietary VitaMTP protocol and is not supported on Android.</string>
+    <string name="transfer_vita_connected">PS Vita detected</string>
+    <string name="transfer_vita_not_connected">No PS Vita detected</string>
+    <string name="transfer_connecting">Connecting…</string>
+    <string name="transfer_uploading">Uploading…</string>
+    <string name="transfer_success">Transfer complete!</string>
+    <string name="transfer_error">Error: %1$s</string>
+    <string name="transfer_ftp_no_ip">Please enter the PS Vita IP address</string>
+    <string name="transfer_no_file">Please select a file first</string>
+    <string name="transfer_ftp_failed">Transfer failed — check that VitaShell FTP is active</string>
+    <string name="transfer_usb_no_write">Cannot write to selected destination</string>
+
+    <string name="usb_hint_body">Your PS Vita is connected via USB. To transfer files, use VitaShell\'s FTP mode over Wi-Fi. Direct USB file transfer requires Sony\'s proprietary VitaMTP protocol and is not supported on Android.</string>
 
     <string name="permutils_title">Permission needed</string>
     <string name="permutils_message">Storage permission is needed to download files</string>

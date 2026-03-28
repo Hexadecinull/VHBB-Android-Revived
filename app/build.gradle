@@ -8,13 +8,21 @@ android {
     defaultConfig {
         applicationId "ssmg.vhbb_android"
         minSdkVersion 21
-        //noinspection OldTargetApi
         targetSdkVersion 36
-        versionCode 17
-        versionName 'stable-2.2'
+        versionCode 18
+        versionName 'stable-3.0'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resConfigs "en"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("KEYSTORE_PATH") ?: "keystore.jks")
+            storePassword System.getenv("KEYSTORE_PASSWORD") ?: ""
+            keyAlias System.getenv("KEY_ALIAS") ?: ""
+            keyPassword System.getenv("KEY_PASSWORD") ?: ""
+        }
     }
 
     buildTypes {
@@ -22,6 +30,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
@@ -55,7 +64,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'com.android.volley:volley:1.2.0'
     implementation 'commons-net:commons-net:3.10.0'
-    implementation 'commons-net:commons-net:3.10.0'
+    implementation 'androidx.documentfile:documentfile:1.0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'jp.wasabeef:picasso-transformations:2.4.0'
 
