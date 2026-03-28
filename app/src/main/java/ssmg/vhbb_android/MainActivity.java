@@ -24,6 +24,7 @@ import ssmg.vhbb_android.Constants.VHBBAndroid;
 import ssmg.vhbb_android.Constants.VitaDB;
 import ssmg.vhbb_android.Utils.NetworkUtils;
 import ssmg.vhbb_android.Utils.PermissionUtils;
+import ssmg.vhbb_android.ui.transfer.TransferActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_homebrew, R.id.nav_psp, R.id.nav_plugins, R.id.nav_cbpsdb, R.id.nav_extras, R.id.nav_customrepo, R.id.nav_transfer)
+                R.id.nav_homebrew, R.id.nav_psp, R.id.nav_plugins, R.id.nav_cbpsdb, R.id.nav_extras, R.id.nav_customrepo)
                 .setOpenableLayout(drawer).build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -61,6 +62,12 @@ public class MainActivity extends AppCompatActivity {
         MenuItem navSourceCodeItem = navigationView.getMenu().findItem(R.id.nav_github);
         navSourceCodeItem.setOnMenuItemClickListener(item -> {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(VHBBAndroid.BASE_URL)));
+            return true;
+        });
+
+        MenuItem navTransferItem = navigationView.getMenu().findItem(R.id.nav_transfer);
+        navTransferItem.setOnMenuItemClickListener(item -> {
+            startActivity(new Intent(this, TransferActivity.class));
             return true;
         });
 
