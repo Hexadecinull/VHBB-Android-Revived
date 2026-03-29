@@ -19,6 +19,9 @@ import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import io.noties.markwon.Markwon;
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin;
+import io.noties.markwon.ext.tables.TablePlugin;
+import io.noties.markwon.linkify.LinkifyPlugin;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 import java.util.Date;
@@ -100,7 +103,11 @@ public class CBPSDBDetails extends AppCompatActivity {
         if (!readmeUrl.isEmpty()) {
             readmeSection.setVisibility(View.VISIBLE);
             readmeContent.setText(R.string.details_readme_loading);
-            Markwon markwon = Markwon.create(this);
+            Markwon markwon = Markwon.builder(this)
+                    .usePlugin(StrikethroughPlugin.create())
+                    .usePlugin(TablePlugin.create(this))
+                    .usePlugin(LinkifyPlugin.create())
+                    .build();
             RequestQueue queue = Volley.newRequestQueue(this);
             StringRequest req = new StringRequest(Request.Method.GET, readmeUrl,
                     response -> markwon.setMarkdown(readmeContent, response),

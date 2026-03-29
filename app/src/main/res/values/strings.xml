@@ -66,8 +66,7 @@
     <string name="transfer_ftp_path_hint">/ux0:data/</string>
     <string name="transfer_file_label">File to transfer</string>
     <string name="transfer_usb_dest_label">Destination folder on Vita</string>
-    <string name="transfer_pick_file">+ Files</string>
-    <string name="transfer_pick_folder">+ Folder</string>
+    <string name="transfer_pick_file">+ Add Files / Folder</string>
     <string name="transfer_usb_pick_dest">Pick Folder</string>
     <string name="transfer_no_file_selected">No files selected — tap + Files or + Folder</string>
     <string name="transfer_no_dest_selected">No destination selected</string>

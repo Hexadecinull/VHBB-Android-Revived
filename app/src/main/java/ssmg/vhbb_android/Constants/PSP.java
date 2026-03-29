@@ -19,10 +19,10 @@ public class PSP {
     public static final String JSON_SCREENSHOTS      = "screenshots";
 
     public static final int TYPE_ALL            = 0;
-    public static final int TYPE_ORIGINAL_GAMES = 1;
-    public static final int TYPE_GAME_PORTS     = 2;
-    public static final int TYPE_UTILISES       = 4;
-    public static final int TYPE_EMULATORS      = 5;
+    public static final int TYPE_ORIGINAL_GAMES = 11;
+    public static final int TYPE_GAME_PORTS     = 12;
+    public static final int TYPE_UTILISES       = 14;
+    public static final int TYPE_EMULATORS      = 15;
 
     public static final String PARENT_URL             = "https://www.rinnegatamante.eu/vitadb";
     public static final String PSP_LIST_JSON_URL      = PARENT_URL + "/list_psp_hbs_json.php";

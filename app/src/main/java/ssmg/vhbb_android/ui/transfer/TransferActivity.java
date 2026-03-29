@@ -190,7 +190,10 @@ public class TransferActivity extends AppCompatActivity {
 
         mFtpFileLabel.setOnClickListener(v -> toggleFileList());
         findViewById(R.id.ftp_pick_file_btn).setOnClickListener(v -> mFtpFilePicker.launch("*/*"));
-        findViewById(R.id.ftp_pick_folder_btn).setOnClickListener(v -> mFtpFolderPicker.launch(null));
+        findViewById(R.id.ftp_pick_file_btn).setOnLongClickListener(v -> {
+            mFtpFolderPicker.launch(null);
+            return true;
+        });
         mUsbPickFileBtn.setOnClickListener(v -> mUsbFilePicker.launch("*/*"));
         mUsbPickDestBtn.setOnClickListener(v -> mUsbDirPicker.launch(null));
         mFtpTransferBtn.setOnClickListener(v -> startFtpTransfer());
@@ -229,10 +232,14 @@ public class TransferActivity extends AppCompatActivity {
         int count = mSelectedFileUrisFtp.size();
         if (count == 0) {
             mFtpFileLabel.setText(R.string.transfer_no_file_selected);
+            mFtpFilesContainer.setVisibility(View.GONE);
+            mFilesExpanded = false;
         } else if (count == 1) {
             mFtpFileLabel.setText(mSelectedFileNamesFtp.get(0));
+            mFtpFilesContainer.setVisibility(View.VISIBLE);
         } else {
             mFtpFileLabel.setText(count + getString(R.string.transfer_files_selected));
+            if (!mFilesExpanded) mFtpFilesContainer.setVisibility(View.GONE);
         }
     }
 
@@ -250,30 +257,28 @@ public class TransferActivity extends AppCompatActivity {
 
             LinearLayout row = new LinearLayout(this);
             row.setOrientation(LinearLayout.HORIZONTAL);
-            row.setPadding(8, 4, 8, 4);
+            row.setPadding(12, 6, 12, 6);
 
             TextView tv = new TextView(this);
-            tv.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+            tv.setLayoutParams(lp);
             tv.setText(name);
             tv.setTextColor(getResources().getColor(R.color.textColorTitle, null));
             tv.setTextSize(12f);
             row.addView(tv);
 
             Button removeBtn = new Button(this);
-            removeBtn.setText("×");
-            removeBtn.setTextSize(14f);
+            removeBtn.setText("✕");
+            removeBtn.setTextSize(12f);
             removeBtn.setBackgroundColor(android.graphics.Color.TRANSPARENT);
             removeBtn.setTextColor(getResources().getColor(R.color.colorAccent, null));
+            removeBtn.setPadding(8, 0, 8, 0);
             removeBtn.setOnClickListener(v -> {
                 mFolderRelativePaths.remove(mSelectedFileUrisFtp.get(index));
                 mSelectedFileUrisFtp.remove(index);
                 mSelectedFileNamesFtp.remove(index);
                 updateFtpFileLabel();
                 rebuildFileList();
-                if (mSelectedFileUrisFtp.size() <= 1) {
-                    mFtpFilesContainer.setVisibility(View.GONE);
-                    mFilesExpanded = false;
-                }
             });
             row.addView(removeBtn);
             mFtpFilesContainer.addView(row);
