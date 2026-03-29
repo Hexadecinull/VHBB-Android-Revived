@@ -138,6 +138,8 @@ public class CBPSDBFragment extends Fragment {
             boolean isData = item[CBPSDB.CVS_TYPE].equals(CBPSDB.TYPE_DATA);
 
             if (isVisible) {
+                long timeAdded = 0;
+                try { timeAdded = Long.parseLong(item[CBPSDB.CVS_TIME_ADDED]); } catch (NumberFormatException ignored) {}
                 mCBPSDBList.add(new CBPSDBItem(
                     item[CBPSDB.CVS_ID],
                     item[CBPSDB.CVS_TITLE],
@@ -147,7 +149,8 @@ public class CBPSDBFragment extends Fragment {
                     item[CBPSDB.CVS_OPTIONS],
                     item[CBPSDB.CVS_TYPE],
                     item[CBPSDB.CVS_README],
-                    item[CBPSDB.CVS_SOURCE]
+                    item[CBPSDB.CVS_SOURCE],
+                    timeAdded
                 ));
             } else if (isData) {
                 if (item[CBPSDB.CVS_TITLE].length() > 11) {

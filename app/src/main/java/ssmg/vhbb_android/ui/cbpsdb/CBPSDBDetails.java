@@ -3,17 +3,25 @@ package ssmg.vhbb_android.ui.cbpsdb;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
+import io.noties.markwon.Markwon;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
+import java.util.Date;
 
 import ssmg.vhbb_android.Constants.CBPSDB;
 import ssmg.vhbb_android.Constants.VHBBAndroid;
@@ -36,18 +44,24 @@ public class CBPSDBDetails extends AppCompatActivity {
         String typeID = cItem.getType();
         String readmeUrl = cItem.getReadmeUrl();
         String sourceUrl = cItem.getSourceUrl();
+        long timeAdded = cItem.getTimeAdded();
 
         ((TextView) findViewById(R.id.textview_title)).setText(cItem.getName());
         ((TextView) findViewById(R.id.textview_author)).setText(cItem.getAuthor());
         ((TextView) findViewById(R.id.textview_type)).setText(cItem.getTypeString());
 
-        TextView optionsLabel = findViewById(R.id.textview_options_label);
-        TextView optionsValue = findViewById(R.id.textview_options);
-        View optionsSection = findViewById(R.id.ll_options);
+        if (timeAdded > 0) {
+            String dateStr = DateFormat.format("yyyy-MM-dd", new Date(timeAdded * 1000L)).toString();
+            ((TextView) findViewById(R.id.textview_date)).setText(dateStr);
+            findViewById(R.id.ll_date).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.ll_date).setVisibility(View.GONE);
+        }
 
+        View optionsSection = findViewById(R.id.ll_options);
         if (typeID.equals(CBPSDB.TYPE_PLUGIN)) {
             optionsSection.setVisibility(View.VISIBLE);
-            optionsValue.setText(cItem.getOptions());
+            ((TextView) findViewById(R.id.textview_options)).setText(cItem.getOptions());
         } else {
             optionsSection.setVisibility(View.GONE);
         }
@@ -68,21 +82,33 @@ public class CBPSDBDetails extends AppCompatActivity {
                     .into((ImageView) findViewById(R.id.image));
         }
 
-        Button mReadmeBtn = findViewById(R.id.button_readme);
-        Button mSourceBtn = findViewById(R.id.button_source);
-        View linksSection = findViewById(R.id.ll_links);
-        View lineLinks = findViewById(R.id.line_links);
+        View sourceSection = findViewById(R.id.ll_source);
+        TextView sourceBtn = findViewById(R.id.button_source);
+        TextView closedSourceText = findViewById(R.id.textview_closed_source);
+        sourceSection.setVisibility(View.VISIBLE);
+        if (!sourceUrl.isEmpty()) {
+            sourceBtn.setVisibility(View.VISIBLE);
+            closedSourceText.setVisibility(View.GONE);
+            sourceBtn.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(sourceUrl))));
+        } else {
+            sourceBtn.setVisibility(View.GONE);
+            closedSourceText.setVisibility(View.VISIBLE);
+        }
 
-        boolean hasReadme = !readmeUrl.isEmpty();
-        boolean hasSource = !sourceUrl.isEmpty();
-
-        mReadmeBtn.setVisibility(hasReadme ? View.VISIBLE : View.GONE);
-        mSourceBtn.setVisibility(hasSource ? View.VISIBLE : View.GONE);
-        linksSection.setVisibility((hasReadme || hasSource) ? View.VISIBLE : View.GONE);
-        lineLinks.setVisibility((hasReadme || hasSource) ? View.VISIBLE : View.GONE);
-
-        if (hasReadme) mReadmeBtn.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(readmeUrl))));
-        if (hasSource) mSourceBtn.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(sourceUrl))));
+        View readmeSection = findViewById(R.id.ll_readme);
+        TextView readmeContent = findViewById(R.id.textview_readme);
+        if (!readmeUrl.isEmpty()) {
+            readmeSection.setVisibility(View.VISIBLE);
+            readmeContent.setText(R.string.details_readme_loading);
+            Markwon markwon = Markwon.create(this);
+            RequestQueue queue = Volley.newRequestQueue(this);
+            StringRequest req = new StringRequest(Request.Method.GET, readmeUrl,
+                    response -> markwon.setMarkdown(readmeContent, response),
+                    error -> readmeContent.setText(R.string.details_readme_error));
+            queue.add(req);
+        } else {
+            readmeSection.setVisibility(View.GONE);
+        }
 
         ImageButton mDownload = findViewById(R.id.download);
         ImageButton mDownloadData = findViewById(R.id.downloadData);

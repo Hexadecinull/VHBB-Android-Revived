@@ -45,10 +45,6 @@
     <group android:id="@+id/menu_group_about">
 
         <item
-            android:id="@+id/nav_transfer"
-            android:title="@string/menu_transfer" />
-
-        <item
             android:id="@+id/nav_settings"
             android:title="@string/menu_settings" />
 

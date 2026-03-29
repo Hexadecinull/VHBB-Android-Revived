@@ -112,11 +112,40 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/ll_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ll_author"
+                    android:orientation="horizontal"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:paddingRight="8dp"
+                        android:text="@string/details_date"
+                        android:textColor="@color/textColorDescription"
+                        android:textSize="@dimen/text_details_header" />
+
+                    <TextView
+                        android:id="@+id/textview_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:textColor="@color/textColorTitle"
+                        android:textSize="@dimen/text_details_item" />
+
+                </LinearLayout>
+
                 <View
                     android:id="@+id/line2"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:layout_below="@id/ll_author"
+                    android:layout_below="@id/ll_date"
                     android:background="@color/colorBackground" />
 
                 <LinearLayout
@@ -151,42 +180,74 @@
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/line_links"
+                    android:id="@+id/line_source"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:layout_below="@id/ll_options"
                     android:background="@color/colorBackground" />
 
                 <LinearLayout
-                    android:id="@+id/ll_links"
+                    android:id="@+id/ll_source"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/line_links"
+                    android:layout_below="@id/line_source"
                     android:orientation="horizontal"
                     android:paddingLeft="12dp"
                     android:paddingTop="6dp"
                     android:paddingRight="12dp"
-                    android:paddingBottom="8dp">
-
-                    <Button
-                        android:id="@+id/button_readme"
-                        style="@style/Widget.AppCompat.Button.Colored"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_weight="1"
-                        android:text="@string/details_readme" />
+                    android:paddingBottom="8dp"
+                    android:gravity="center_vertical">
 
                     <Button
                         android:id="@+id/button_source"
                         style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/details_source" />
+
+                    <TextView
+                        android:id="@+id/textview_closed_source"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/details_closed_source"
+                        android:textColor="@color/textColorDescription"
+                        android:textSize="@dimen/text_details_header"
+                        android:textStyle="italic" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/line_readme"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_below="@id/ll_source"
+                    android:background="@color/colorBackground" />
+
+                <LinearLayout
+                    android:id="@+id/ll_readme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/line_readme"
+                    android:orientation="vertical"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/details_readme"
+                        android:textColor="@color/textColorDescription"
+                        android:textSize="@dimen/text_details_header"
+                        android:paddingBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/textview_readme"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_weight="1"
-                        android:text="@string/details_source" />
+                        android:textColor="@color/textColorTitle"
+                        android:textSize="@dimen/text_description" />
 
                 </LinearLayout>
 

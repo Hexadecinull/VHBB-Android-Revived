@@ -1,6 +1,5 @@
 package ssmg.vhbb_android.ui.transfer;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,16 +11,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.DocumentsContract;
 import android.provider.OpenableColumns;
 import android.database.Cursor;
-import android.view.View;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -36,7 +36,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -45,17 +47,21 @@ import ssmg.vhbb_android.R;
 public class TransferActivity extends AppCompatActivity {
 
     private static final int VITA_VENDOR_ID  = 0x054C;
-    private static final int VITA_PRODUCT_ID = 0x04E4;
+    private static final int VITA_PID_FAT    = 0x04E4;
+    private static final int VITA_PID_SLIM   = 0x0BDC;
+    private static final int VITA_PID_TV     = 0x05B9;
     private static final int FTP_PORT        = 1337;
     private static final String DEFAULT_REMOTE_PATH = "/ux0:data/";
 
-    private List<Uri> mSelectedFileUrisFtp = new ArrayList<>();
+    private final List<Uri> mSelectedFileUrisFtp = new ArrayList<>();
+    private final List<String> mSelectedFileNamesFtp = new ArrayList<>();
     private Uri mSelectedFileUriUsb;
     private Uri mUsbDestDirUri;
-    private String mSelectedFileNameFtp = "";
     private String mSelectedFileNameUsb = "";
+    private boolean mFilesExpanded = false;
 
     private TextView mFtpFileLabel;
+    private LinearLayout mFtpFilesContainer;
     private TextView mUsbFileLabel;
     private TextView mUsbDestLabel;
     private TextView mFtpStatus;
@@ -77,15 +83,50 @@ public class TransferActivity extends AppCompatActivity {
     private final ActivityResultLauncher<String> mFtpFilePicker =
             registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
                 if (uris != null && !uris.isEmpty()) {
-                    mSelectedFileUrisFtp = new ArrayList<>(uris);
-                    if (uris.size() == 1) {
-                        mSelectedFileNameFtp = resolveFileName(uris.get(0));
-                        mFtpFileLabel.setText(mSelectedFileNameFtp);
-                    } else {
-                        mFtpFileLabel.setText(uris.size() + " files selected");
+                    for (Uri uri : uris) {
+                        if (!mSelectedFileUrisFtp.contains(uri)) {
+                            mSelectedFileUrisFtp.add(uri);
+                            mSelectedFileNamesFtp.add(resolveFileName(uri));
+                        }
+                    }
+                    updateFtpFileLabel();
+                    rebuildFileList();
+                }
+            });
+
+    private final ActivityResultLauncher<Uri> mFtpFolderPicker =
+            registerForActivityResult(new ActivityResultContracts.OpenDocumentTree(), uri -> {
+                if (uri != null) {
+                    getContentResolver().takePersistableUriPermission(uri,
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    DocumentFile dir = DocumentFile.fromTreeUri(this, uri);
+                    if (dir != null) {
+                        collectFilesFromDir(dir, "");
+                        updateFtpFileLabel();
+                        rebuildFileList();
                     }
                 }
             });
+
+    private final Map<Uri, String> mFolderRelativePaths = new HashMap<>();
+
+    private void collectFilesFromDir(DocumentFile dir, String relativePath) {
+        DocumentFile[] files = dir.listFiles();
+        if (files == null) return;
+        for (DocumentFile f : files) {
+            if (f.isDirectory()) {
+                collectFilesFromDir(f, relativePath + f.getName() + "/");
+            } else if (f.isFile()) {
+                Uri uri = f.getUri();
+                String name = f.getName() != null ? f.getName() : "";
+                if (!mSelectedFileUrisFtp.contains(uri)) {
+                    mSelectedFileUrisFtp.add(uri);
+                    mSelectedFileNamesFtp.add(relativePath + name);
+                    mFolderRelativePaths.put(uri, relativePath + name);
+                }
+            }
+        }
+    }
 
     private final ActivityResultLauncher<String> mUsbFilePicker =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
@@ -111,10 +152,7 @@ public class TransferActivity extends AppCompatActivity {
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(intent.getAction())
-                    || UsbManager.ACTION_USB_DEVICE_DETACHED.equals(intent.getAction())) {
-                updateUsbConnectionStatus();
-            }
+            updateUsbConnectionStatus();
         }
     };
 
@@ -125,28 +163,34 @@ public class TransferActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_transfer);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.menu_transfer);
+        }
 
-        mFtpIpInput       = findViewById(R.id.ftp_ip_input);
-        mFtpRemotePath    = findViewById(R.id.ftp_remote_path);
-        mFtpFileLabel     = findViewById(R.id.ftp_file_label);
-        mFtpStatus        = findViewById(R.id.ftp_status);
-        mFtpProgress      = findViewById(R.id.ftp_progress);
-        mFtpTransferBtn   = findViewById(R.id.ftp_transfer_btn);
+        mFtpIpInput         = findViewById(R.id.ftp_ip_input);
+        mFtpRemotePath      = findViewById(R.id.ftp_remote_path);
+        mFtpFileLabel       = findViewById(R.id.ftp_file_label);
+        mFtpFilesContainer  = findViewById(R.id.ftp_files_container);
+        mFtpStatus          = findViewById(R.id.ftp_status);
+        mFtpProgress        = findViewById(R.id.ftp_progress);
+        mFtpTransferBtn     = findViewById(R.id.ftp_transfer_btn);
 
-        mUsbFileLabel         = findViewById(R.id.usb_file_label);
-        mUsbDestLabel         = findViewById(R.id.usb_dest_label);
-        mUsbStatus            = findViewById(R.id.usb_status);
-        mUsbProgress          = findViewById(R.id.usb_progress);
-        mUsbTransferBtn       = findViewById(R.id.usb_transfer_btn);
-        mUsbPickDestBtn       = findViewById(R.id.usb_pick_dest_btn);
-        mUsbPickFileBtn       = findViewById(R.id.usb_pick_file_btn);
-        mUsbConnectionStatus  = findViewById(R.id.usb_connection_status);
-        mUsbConnectionIcon    = findViewById(R.id.usb_connection_icon);
+        mUsbFileLabel           = findViewById(R.id.usb_file_label);
+        mUsbDestLabel           = findViewById(R.id.usb_dest_label);
+        mUsbStatus              = findViewById(R.id.usb_status);
+        mUsbProgress            = findViewById(R.id.usb_progress);
+        mUsbTransferBtn         = findViewById(R.id.usb_transfer_btn);
+        mUsbPickDestBtn         = findViewById(R.id.usb_pick_dest_btn);
+        mUsbPickFileBtn         = findViewById(R.id.usb_pick_file_btn);
+        mUsbConnectionStatus    = findViewById(R.id.usb_connection_status);
+        mUsbConnectionIcon      = findViewById(R.id.usb_connection_icon);
 
         mFtpRemotePath.setText(DEFAULT_REMOTE_PATH);
 
+        mFtpFileLabel.setOnClickListener(v -> toggleFileList());
         findViewById(R.id.ftp_pick_file_btn).setOnClickListener(v -> mFtpFilePicker.launch("*/*"));
+        findViewById(R.id.ftp_pick_folder_btn).setOnClickListener(v -> mFtpFolderPicker.launch(null));
         mUsbPickFileBtn.setOnClickListener(v -> mUsbFilePicker.launch("*/*"));
         mUsbPickDestBtn.setOnClickListener(v -> mUsbDirPicker.launch(null));
         mFtpTransferBtn.setOnClickListener(v -> startFtpTransfer());
@@ -181,12 +225,70 @@ public class TransferActivity extends AppCompatActivity {
         mExecutor.shutdown();
     }
 
+    private void updateFtpFileLabel() {
+        int count = mSelectedFileUrisFtp.size();
+        if (count == 0) {
+            mFtpFileLabel.setText(R.string.transfer_no_file_selected);
+        } else if (count == 1) {
+            mFtpFileLabel.setText(mSelectedFileNamesFtp.get(0));
+        } else {
+            mFtpFileLabel.setText(count + getString(R.string.transfer_files_selected));
+        }
+    }
+
+    private void toggleFileList() {
+        if (mSelectedFileUrisFtp.size() <= 1) return;
+        mFilesExpanded = !mFilesExpanded;
+        mFtpFilesContainer.setVisibility(mFilesExpanded ? View.VISIBLE : View.GONE);
+    }
+
+    private void rebuildFileList() {
+        mFtpFilesContainer.removeAllViews();
+        for (int i = 0; i < mSelectedFileUrisFtp.size(); i++) {
+            final int index = i;
+            final String name = mSelectedFileNamesFtp.get(i);
+
+            LinearLayout row = new LinearLayout(this);
+            row.setOrientation(LinearLayout.HORIZONTAL);
+            row.setPadding(8, 4, 8, 4);
+
+            TextView tv = new TextView(this);
+            tv.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+            tv.setText(name);
+            tv.setTextColor(getResources().getColor(R.color.textColorTitle, null));
+            tv.setTextSize(12f);
+            row.addView(tv);
+
+            Button removeBtn = new Button(this);
+            removeBtn.setText("×");
+            removeBtn.setTextSize(14f);
+            removeBtn.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            removeBtn.setTextColor(getResources().getColor(R.color.colorAccent, null));
+            removeBtn.setOnClickListener(v -> {
+                mFolderRelativePaths.remove(mSelectedFileUrisFtp.get(index));
+                mSelectedFileUrisFtp.remove(index);
+                mSelectedFileNamesFtp.remove(index);
+                updateFtpFileLabel();
+                rebuildFileList();
+                if (mSelectedFileUrisFtp.size() <= 1) {
+                    mFtpFilesContainer.setVisibility(View.GONE);
+                    mFilesExpanded = false;
+                }
+            });
+            row.addView(removeBtn);
+            mFtpFilesContainer.addView(row);
+        }
+    }
+
     private boolean isVitaConnected() {
         UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
         if (usbManager == null) return false;
         for (UsbDevice device : usbManager.getDeviceList().values()) {
-            if (device.getVendorId() == VITA_VENDOR_ID && device.getProductId() == VITA_PRODUCT_ID)
-                return true;
+            if (device.getVendorId() == VITA_VENDOR_ID) {
+                int pid = device.getProductId();
+                if (pid == VITA_PID_FAT || pid == VITA_PID_SLIM || pid == VITA_PID_TV)
+                    return true;
+            }
         }
         return false;
     }
@@ -254,6 +356,7 @@ public class TransferActivity extends AppCompatActivity {
 
         final String finalRemotePath = remotePath;
         final List<Uri> fileUris = new ArrayList<>(mSelectedFileUrisFtp);
+        final List<String> fileNames = new ArrayList<>(mSelectedFileNamesFtp);
 
         setFtpUiTransferring(true);
         mFtpStatus.setText(R.string.transfer_connecting);
@@ -266,21 +369,29 @@ public class TransferActivity extends AppCompatActivity {
                 ftp.setFileType(FTP.BINARY_FILE_TYPE);
                 ftp.enterLocalPassiveMode();
 
-                mHandler.post(() -> mFtpStatus.setText(R.string.transfer_uploading));
-
                 int total = fileUris.size();
-                int done = 0;
                 boolean allSuccess = true;
 
-                for (Uri fileUri : fileUris) {
-                    String fileName = resolveFileName(fileUri);
+                for (int i = 0; i < fileUris.size(); i++) {
+                    final int idx = i;
+                    Uri fileUri = fileUris.get(i);
+                    String relativeName = fileNames.get(i);
+
+                    mHandler.post(() -> mFtpStatus.setText(
+                            getString(R.string.transfer_uploading) + " " + (idx + 1) + "/" + total + " - " + relativeName));
+
+                    String remoteDest = finalRemotePath + relativeName;
+
+                    String dir = remoteDest.substring(0, remoteDest.lastIndexOf("/") + 1);
+                    if (!dir.equals(finalRemotePath)) {
+                        ftp.makeDirectory(dir);
+                        ftp.changeWorkingDirectory("/");
+                    }
+
                     InputStream is = getContentResolver().openInputStream(fileUri);
-                    boolean success = ftp.storeFile(finalRemotePath + fileName, is);
+                    boolean success = ftp.storeFile(remoteDest, is);
                     if (is != null) is.close();
                     if (!success) allSuccess = false;
-                    done++;
-                    final int doneF = done;
-                    mHandler.post(() -> mFtpStatus.setText(getString(R.string.transfer_uploading) + " " + doneF + "/" + total));
                 }
 
                 ftp.logout();

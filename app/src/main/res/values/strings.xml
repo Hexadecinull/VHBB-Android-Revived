@@ -28,12 +28,15 @@
     <string name="menu_emulators">Emulators</string>
 
     <string name="details_author">Author:</string>
-    <string name="details_date">Last Update:</string>
+    <string name="details_date">Release Date:</string>
     <string name="details_source">Source Page</string>
     <string name="details_release">Release Page</string>
     <string name="details_desc">Description:</string>
     <string name="details_options">Options:</string>
     <string name="details_readme">README</string>
+    <string name="details_readme_loading">Loading README…</string>
+    <string name="details_readme_error">Failed to load README.</string>
+    <string name="details_closed_source">CLOSED SOURCE</string>
 
     <string name="customrepo_refresh_title">Please enter a valid repo URL.</string>
     <string name="customrepo_refresh">Refresh</string>
@@ -63,10 +66,12 @@
     <string name="transfer_ftp_path_hint">/ux0:data/</string>
     <string name="transfer_file_label">File to transfer</string>
     <string name="transfer_usb_dest_label">Destination folder on Vita</string>
-    <string name="transfer_pick_file">Pick File</string>
+    <string name="transfer_pick_file">+ Files</string>
+    <string name="transfer_pick_folder">+ Folder</string>
     <string name="transfer_usb_pick_dest">Pick Folder</string>
-    <string name="transfer_no_file_selected">No file selected</string>
+    <string name="transfer_no_file_selected">No files selected — tap + Files or + Folder</string>
     <string name="transfer_no_dest_selected">No destination selected</string>
+    <string name="transfer_files_selected"> files selected ▼ (tap to expand)</string>
     <string name="transfer_send_btn">Send to PS Vita</string>
     <string name="transfer_send">Send to PS Vita</string>
 
@@ -77,7 +82,7 @@
     <string name="transfer_success">Transfer complete!</string>
     <string name="transfer_error">Error: %1$s</string>
     <string name="transfer_ftp_no_ip">Please enter the PS Vita IP address</string>
-    <string name="transfer_no_file">Please select a file first</string>
+    <string name="transfer_no_file">Please select a file or folder first</string>
     <string name="transfer_ftp_failed">Transfer failed — check that VitaShell FTP is active</string>
     <string name="transfer_usb_no_write">Cannot write to selected destination</string>
 
