@@ -65,6 +65,9 @@ public class CBPSDBFragment extends Fragment {
             } else if (id == R.id.bnav_plugins) {
                 mCBPSDBAdapter.getTypeFilter().filter(CBPSDB.TYPE_PLUGIN);
                 return true;
+            } else if (id == R.id.bnav_data) {
+                mCBPSDBAdapter.getTypeFilter().filter(CBPSDB.TYPE_DATA);
+                return true;
             }
             return false;
         });
@@ -126,13 +129,11 @@ public class CBPSDBFragment extends Fragment {
             Math.max(Math.max(CBPSDB.CVS_ID, CBPSDB.CVS_TITLE), Math.max(CBPSDB.CVS_CREDITS, Math.max(CBPSDB.CVS_ICON0, Math.max(CBPSDB.CVS_URL, CBPSDB.CVS_OPTIONS))))
         );
 
+        List<String[]> standaloneDataList = new ArrayList<>();
+
         for (int i = 1; i < result.size(); i++) {
             String[] item = result.get(i);
-            // Skip rows that are too short
-            if (item.length <= maxIndex) {
-                // Optionally log: Skipping malformed line
-                continue;
-            }
+            if (item.length <= maxIndex) continue;
 
             boolean isVisible = item[CBPSDB.CVS_VISIBLE].equals("True");
             boolean isData = item[CBPSDB.CVS_TYPE].equals(CBPSDB.TYPE_DATA);
@@ -153,17 +154,11 @@ public class CBPSDBFragment extends Fragment {
                     timeAdded
                 ));
             } else if (isData) {
-                if (item[CBPSDB.CVS_TITLE].length() > 11) {
-                    dataList.add(new String[] {
-                        item[CBPSDB.CVS_TITLE].substring(0, item[CBPSDB.CVS_TITLE].length() - 11),
-                        item[CBPSDB.CVS_URL]
-                    });
-                } else {
-                    dataList.add(new String[] {
-                        item[CBPSDB.CVS_TITLE],
-                        item[CBPSDB.CVS_URL]
-                    });
-                }
+                String parentName = item[CBPSDB.CVS_TITLE].length() > 11
+                    ? item[CBPSDB.CVS_TITLE].substring(0, item[CBPSDB.CVS_TITLE].length() - 11)
+                    : item[CBPSDB.CVS_TITLE];
+                dataList.add(new String[] { parentName, item[CBPSDB.CVS_URL] });
+                standaloneDataList.add(item);
             }
         }
 
@@ -172,6 +167,32 @@ public class CBPSDBFragment extends Fragment {
                 for (int j = 0; j < mCBPSDBList.size(); j++)
                     if (dataList.get(i)[0].equals(mCBPSDBList.get(j).getName()))
                         mCBPSDBList.get(j).setDataUrl(dataList.get(i)[1]);
+
+        for (String[] item : standaloneDataList) {
+            boolean linked = false;
+            String parentName = item[CBPSDB.CVS_TITLE].length() > 11
+                ? item[CBPSDB.CVS_TITLE].substring(0, item[CBPSDB.CVS_TITLE].length() - 11)
+                : item[CBPSDB.CVS_TITLE];
+            for (CBPSDBItem existing : mCBPSDBList) {
+                if (parentName.equals(existing.getName())) { linked = true; break; }
+            }
+            if (!linked) {
+                long timeAdded = 0;
+                try { timeAdded = Long.parseLong(item[CBPSDB.CVS_TIME_ADDED]); } catch (NumberFormatException ignored) {}
+                mCBPSDBList.add(new CBPSDBItem(
+                    item[CBPSDB.CVS_ID],
+                    item[CBPSDB.CVS_TITLE],
+                    item[CBPSDB.CVS_CREDITS],
+                    item[CBPSDB.CVS_ICON0],
+                    item[CBPSDB.CVS_URL],
+                    item[CBPSDB.CVS_OPTIONS],
+                    item[CBPSDB.CVS_TYPE],
+                    item.length > CBPSDB.CVS_README ? item[CBPSDB.CVS_README] : "",
+                    item.length > CBPSDB.CVS_SOURCE ? item[CBPSDB.CVS_SOURCE] : "",
+                    timeAdded
+                ));
+            }
+        }
 
         mCBPSDBAdapter = new CBPSDBAdapter(requireActivity(), mCBPSDBList);
         mRecyclerView.setAdapter(mCBPSDBAdapter);

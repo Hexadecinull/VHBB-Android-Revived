@@ -97,6 +97,7 @@ jobs:
 
       - name: Print run URL
         run: |
-          P1="VH"; P2="BB"
-          REPO="${P1}${P2}-Android-Revived"
-          echo "Artifacts: https://github.com/Hexadecinull/${REPO}/actions/runs/${{ github.run_id }}"
+          echo "Download artifacts at:"
+          P1="https://github.com/Hexadecinull/"
+          P2="VHBB-Android-Revived/actions/runs/"
+          echo "${P1}${P2}${{ github.run_id }}"

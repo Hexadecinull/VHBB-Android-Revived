@@ -230,6 +230,17 @@
             android:layout_margin="12dp">
 
             <ImageButton
+                android:id="@+id/qrCode"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_toLeftOf="@id/downloadData"
+                android:layout_marginRight="6dp"
+                android:background="@android:color/transparent"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:src="@drawable/ic_qr_code_24dp" />
+
+            <ImageButton
                 android:id="@+id/download"
                 android:layout_width="48dp"
                 android:layout_height="48dp"

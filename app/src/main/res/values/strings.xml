@@ -34,6 +34,7 @@
     <string name="details_desc">Description:</string>
     <string name="details_options">Options:</string>
     <string name="details_readme">README</string>
+    <string name="menu_data">Data</string>
     <string name="details_readme_loading">Loading README…</string>
     <string name="details_readme_error">Failed to load README.</string>
     <string name="details_closed_source">CLOSED SOURCE</string>
@@ -66,11 +67,11 @@
     <string name="transfer_ftp_path_hint">/ux0:data/</string>
     <string name="transfer_file_label">File to transfer</string>
     <string name="transfer_usb_dest_label">Destination folder on Vita</string>
-    <string name="transfer_pick_file">+ Add Files / Folder</string>
+    <string name="transfer_pick_file">ADD FILES</string>
     <string name="transfer_usb_pick_dest">Pick Folder</string>
     <string name="transfer_no_file_selected">No files selected — tap + Files or + Folder</string>
     <string name="transfer_no_dest_selected">No destination selected</string>
-    <string name="transfer_files_selected"> files selected ▼ (tap to expand)</string>
+    <string name="transfer_files_selected_prefix"> files selected</string>
     <string name="transfer_send_btn">Send to PS Vita</string>
     <string name="transfer_send">Send to PS Vita</string>
 

@@ -13,8 +13,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.OpenableColumns;
 import android.database.Cursor;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -190,10 +192,7 @@ public class TransferActivity extends AppCompatActivity {
 
         mFtpFileLabel.setOnClickListener(v -> toggleFileList());
         findViewById(R.id.ftp_pick_file_btn).setOnClickListener(v -> mFtpFilePicker.launch("*/*"));
-        findViewById(R.id.ftp_pick_file_btn).setOnLongClickListener(v -> {
-            mFtpFolderPicker.launch(null);
-            return true;
-        });
+        findViewById(R.id.ftp_pick_folder_btn).setOnClickListener(v -> mFtpFolderPicker.launch(null));
         mUsbPickFileBtn.setOnClickListener(v -> mUsbFilePicker.launch("*/*"));
         mUsbPickDestBtn.setOnClickListener(v -> mUsbDirPicker.launch(null));
         mFtpTransferBtn.setOnClickListener(v -> startFtpTransfer());
@@ -238,15 +237,60 @@ public class TransferActivity extends AppCompatActivity {
             mFtpFileLabel.setText(mSelectedFileNamesFtp.get(0));
             mFtpFilesContainer.setVisibility(View.VISIBLE);
         } else {
-            mFtpFileLabel.setText(count + getString(R.string.transfer_files_selected));
-            if (!mFilesExpanded) mFtpFilesContainer.setVisibility(View.GONE);
+            String arrow = mFilesExpanded ? " ▲" : " ▼";
+            mFtpFileLabel.setText(count + getString(R.string.transfer_files_selected_prefix) + arrow);
         }
     }
 
     private void toggleFileList() {
         if (mSelectedFileUrisFtp.size() <= 1) return;
         mFilesExpanded = !mFilesExpanded;
-        mFtpFilesContainer.setVisibility(mFilesExpanded ? View.VISIBLE : View.GONE);
+        int count = mSelectedFileUrisFtp.size();
+        String arrow = mFilesExpanded ? " ▲" : " ▼";
+        mFtpFileLabel.setText(count + getString(R.string.transfer_files_selected_prefix) + arrow);
+        if (mFilesExpanded) {
+            expandView(mFtpFilesContainer);
+        } else {
+            collapseView(mFtpFilesContainer);
+        }
+    }
+
+    private void expandView(View v) {
+        v.measure(View.MeasureSpec.makeMeasureSpec(v.getWidth(), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        final int targetHeight = v.getMeasuredHeight();
+        v.getLayoutParams().height = 1;
+        v.setVisibility(View.VISIBLE);
+        Animation anim = new Animation() {
+            @Override
+            protected void applyTransformation(float t, Transformation trans) {
+                v.getLayoutParams().height = t == 1 ? ViewGroup.LayoutParams.WRAP_CONTENT : (int)(targetHeight * t);
+                v.requestLayout();
+            }
+            @Override
+            public boolean willChangeBounds() { return true; }
+        };
+        anim.setDuration((long)(targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(anim);
+    }
+
+    private void collapseView(View v) {
+        final int initialHeight = v.getMeasuredHeight();
+        Animation anim = new Animation() {
+            @Override
+            protected void applyTransformation(float t, Transformation trans) {
+                if (t == 1) {
+                    v.setVisibility(View.GONE);
+                } else {
+                    v.getLayoutParams().height = initialHeight - (int)(initialHeight * t);
+                    v.requestLayout();
+                }
+            }
+            @Override
+            public boolean willChangeBounds() { return true; }
+        };
+        anim.setDuration((long)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(anim);
     }
 
     private void rebuildFileList() {

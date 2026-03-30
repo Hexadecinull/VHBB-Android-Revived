@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_menu_plugins_24dp"
         android:title="@string/menu_plugins" />
 
+    <item
+        android:id="@+id/bnav_data"
+        android:icon="@drawable/ic_menu_extras_24dp"
+        android:title="@string/menu_data" />
+
 </menu>

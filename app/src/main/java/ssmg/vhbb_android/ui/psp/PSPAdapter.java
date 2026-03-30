@@ -52,7 +52,6 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
         holder.mDescription.setText(currentItem.getDescription());
         holder.mDate.setText(String.format("(%s)", currentItem.getDateString()));
         holder.mDownloads.setText(String.format(Locale.getDefault(), "%dDLs", currentItem.getDownloads()));
-        holder.mType.setText(currentItem.getTypeString());
         Picasso.get().load(currentItem.getIconUrl()).fit().centerInside().into(holder.mIcon);
 
         holder.mDownload.setOnClickListener(v -> DownloadUtils.VHBBDownloadManager(mActivity, v.getContext(), Uri.parse(currentItem.getUrl()), currentItem.getName() + ".zip"));
@@ -70,7 +69,7 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTitle, mAuthor, mDescription, mDate, mDownloads, mType;
+        public TextView mTitle, mAuthor, mDescription, mDate, mDownloads;
         public ImageButton mDownload;
         public ImageView mIcon;
         public LinearLayout mContainer;
@@ -82,7 +81,6 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
             mDescription = itemView.findViewById(R.id.textview_desc);
             mDate = itemView.findViewById(R.id.textview_date);
             mDownloads = itemView.findViewById(R.id.textview_downloads);
-            mType = itemView.findViewById(R.id.textview_type);
             mDownload = itemView.findViewById(R.id.download);
             mIcon = itemView.findViewById(R.id.image);
             mContainer = itemView.findViewById(R.id.ll_main);
