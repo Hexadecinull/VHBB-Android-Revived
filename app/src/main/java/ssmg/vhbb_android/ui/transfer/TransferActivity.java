@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
