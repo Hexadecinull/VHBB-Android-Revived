@@ -1,6 +1,8 @@
 package ssmg.vhbb_android.ui.psp;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +14,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.zxing.BarcodeFormat;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
@@ -52,6 +56,7 @@ public class PSPDetails extends AppCompatActivity {
         Button mSourceBtn = findViewById(R.id.button_source);
         Button mReleaseBtn = findViewById(R.id.button_release);
         ImageButton mDownload = findViewById(R.id.download);
+        ImageButton mQrCode = findViewById(R.id.qrCode);
         mScreenshot = findViewById(R.id.screenshot);
 
         ((TextView) findViewById(R.id.textview_title)).setText(String.format("%s %s", cItem.getName(), cItem.getVersion()));
@@ -71,6 +76,7 @@ public class PSPDetails extends AppCompatActivity {
         mReleaseBtn.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ReleaseUrl))));
 
         mDownload.setOnClickListener(v -> DownloadUtils.VHBBDownloadManager(this, this, Uri.parse(cItem.getUrl()), cItem.getName() + ".zip"));
+        mQrCode.setOnClickListener(v -> showQrDialog(cItem.getUrl(), cItem.getName()));
 
         if (ScreenshotsUrl != null)
             if (ScreenshotsUrl.length == 1) Picasso.get().load(ScreenshotsUrl[0]).fit().centerInside().memoryPolicy(MemoryPolicy.NO_CACHE).into(mScreenshot);
@@ -85,6 +91,23 @@ public class PSPDetails extends AppCompatActivity {
                 fullscreenIntent.putExtra("INDEX", sc_index == 0 ? 0 : sc_index - 1);
                 startActivity(fullscreenIntent);
             });
+        }
+    }
+
+    private void showQrDialog(String url, String name) {
+        try {
+            BarcodeEncoder encoder = new BarcodeEncoder();
+            Bitmap bitmap = encoder.encodeBitmap(url, BarcodeFormat.QR_CODE, 600, 600);
+            ImageView qrImageView = new ImageView(this);
+            qrImageView.setImageBitmap(bitmap);
+            qrImageView.setPadding(32, 32, 32, 32);
+            new AlertDialog.Builder(this)
+                    .setTitle(name)
+                    .setView(qrImageView)
+                    .setPositiveButton(R.string.ok, null)
+                    .show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

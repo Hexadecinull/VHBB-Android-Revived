@@ -223,32 +223,22 @@
 
         </ScrollView>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|bottom"
-            android:layout_margin="12dp">
+            android:layout_margin="12dp"
+            android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/qrCode"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_toLeftOf="@id/downloadData"
                 android:layout_marginRight="6dp"
                 android:background="@android:color/transparent"
                 android:scaleX="2"
                 android:scaleY="2"
                 android:src="@drawable/ic_qr_code_24dp" />
-
-            <ImageButton
-                android:id="@+id/download"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_toRightOf="@id/downloadData"
-                android:background="@android:color/transparent"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:src="@drawable/ic_download_circle_24dp" />
 
             <ImageButton
                 android:id="@+id/downloadData"
@@ -258,9 +248,19 @@
                 android:background="@android:color/transparent"
                 android:scaleX="2"
                 android:scaleY="2"
-                android:src="@drawable/ic_download_data_circle_24dp" />
+                android:src="@drawable/ic_download_data_circle_24dp"
+                android:visibility="gone" />
 
-        </RelativeLayout>
+            <ImageButton
+                android:id="@+id/download"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:src="@drawable/ic_download_circle_24dp" />
+
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 

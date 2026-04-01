@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/bnav_data"
-        android:icon="@drawable/ic_menu_extras_24dp"
+        android:icon="@drawable/ic_menu_data_24dp"
         android:title="@string/menu_data" />
 
 </menu>

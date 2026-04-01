@@ -52,7 +52,7 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
         holder.mDescription.setText(currentItem.getDescription());
         holder.mDate.setText(String.format("(%s)", currentItem.getDateString()));
         holder.mDownloads.setText(String.format(Locale.getDefault(), "%dDLs", currentItem.getDownloads()));
-        Picasso.get().load(currentItem.getIconUrl()).fit().centerInside().into(holder.mIcon);
+        Picasso.get().load(currentItem.getIconUrl()).fit().centerInside().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(holder.mIcon);
 
         holder.mDownload.setOnClickListener(v -> DownloadUtils.VHBBDownloadManager(mActivity, v.getContext(), Uri.parse(currentItem.getUrl()), currentItem.getName() + ".zip"));
 

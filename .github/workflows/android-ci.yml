@@ -95,9 +95,17 @@ jobs:
           name: release-apk
           path: app/build/outputs/apk/release/app-release.apk
 
-      - name: Print run URL
+  announce:
+    name: Announce Release URL
+    needs: release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print artifact URL
+        env:
+          RUN_ID: ${{ github.run_id }}
         run: |
-          echo "Download artifacts at:"
-          P1="https://github.com/Hexadecinull/"
-          P2="VHBB-Android-Revived/actions/runs/"
-          echo "${P1}${P2}${{ github.run_id }}"
+          REPO="VHBB-Android-Revived"
+          OWNER="Hexadecinull"
+          echo "Release artifacts available at:"
+          echo "https://github.com/${OWNER}/${REPO}/actions/runs/${RUN_ID}"

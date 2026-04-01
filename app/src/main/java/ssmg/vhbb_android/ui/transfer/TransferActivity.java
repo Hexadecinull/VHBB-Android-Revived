@@ -257,7 +257,7 @@ public class TransferActivity extends AppCompatActivity {
     }
 
     private void expandView(View v) {
-        v.measure(View.MeasureSpec.makeMeasureSpec(v.getWidth(), View.MeasureSpec.EXACTLY),
+        v.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         final int targetHeight = v.getMeasuredHeight();
         v.getLayoutParams().height = 1;
@@ -265,13 +265,13 @@ public class TransferActivity extends AppCompatActivity {
         Animation anim = new Animation() {
             @Override
             protected void applyTransformation(float t, Transformation trans) {
-                v.getLayoutParams().height = t == 1 ? ViewGroup.LayoutParams.WRAP_CONTENT : (int)(targetHeight * t);
+                v.getLayoutParams().height = t == 1 ? ViewGroup.LayoutParams.WRAP_CONTENT : Math.max(1, (int)(targetHeight * t));
                 v.requestLayout();
             }
             @Override
             public boolean willChangeBounds() { return true; }
         };
-        anim.setDuration((long)(targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        anim.setDuration(Math.max(150, (long)(targetHeight / v.getContext().getResources().getDisplayMetrics().density)));
         v.startAnimation(anim);
     }
 
