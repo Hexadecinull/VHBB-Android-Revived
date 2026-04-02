@@ -227,26 +227,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|bottom"
-            android:layout_margin="12dp"
+            android:layout_margin="6dp"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/qrCode"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginRight="6dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginRight="2dp"
                 android:background="@android:color/transparent"
-                android:scaleX="2"
-                android:scaleY="2"
+                android:padding="6dp"
                 android:src="@drawable/ic_qr_code_24dp" />
 
             <ImageButton
                 android:id="@+id/download"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:background="@android:color/transparent"
-                android:scaleX="2"
-                android:scaleY="2"
+                android:padding="6dp"
                 android:src="@drawable/ic_download_circle_24dp" />
 
         </LinearLayout>

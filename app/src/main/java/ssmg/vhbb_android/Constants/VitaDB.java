@@ -23,6 +23,9 @@ public class VitaDB {
     public static final String JSON_URL                 = "url";
     public static final String JSON_DATA                = "data";
     public static final String JSON_SCREENSHOTS         = "screenshots";
+    public static final String JSON_TITLEID             = "titleid";
+    public static final String JSON_TROPHIES            = "trophies";
+    public static final String JSON_AI                  = "ai";
     //endregion
 
 
@@ -38,6 +41,7 @@ public class VitaDB {
     //region URL
     public static final String PARENT_URL               = "https://www.rinnegatamante.eu/vitadb";
     public static final String HOMEBREW_LIST_JSON_URL   = String.format("%s/list_hbs_json.php", PARENT_URL);
+    public static final String ACHIEVEMENTS_URL         = PARENT_URL + "/#/achievement/";
     public static final String PLUGIN_LIST_JSON_URL     = String.format("%s/list_plugins_json.php", PARENT_URL);
     public static final String INFO_PARENT_URL          = String.format("%s/#/info/", PARENT_URL);
     public static final String ICONS_PARENT_URL         = String.format("%s/icons/", PARENT_URL);

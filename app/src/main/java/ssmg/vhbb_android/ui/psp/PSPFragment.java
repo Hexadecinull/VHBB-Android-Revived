@@ -101,8 +101,9 @@ public class PSPFragment extends Fragment {
                             int id                  = item.optInt(PSP.JSON_ID, 0);
                             int downloads           = item.optInt(PSP.JSON_DOWNLOADS, 0);
                             long size               = item.optLong(PSP.JSON_SIZE, 0);
+                            int ai                  = item.optInt(PSP.JSON_AI, 0);
 
-                            mPSPList.add(new PSPItem(name, iconUrl, version, author, description, longDescription, date, sourceUrl, releaseUrl, url, screenshotsUrl, type, id, downloads, size));
+                            mPSPList.add(new PSPItem(name, iconUrl, version, author, description, longDescription, date, sourceUrl, releaseUrl, url, screenshotsUrl, type, id, downloads, size, ai));
                         }
 
                         mPSPAdapter = new PSPAdapter(requireActivity(), mPSPList);

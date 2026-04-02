@@ -48,7 +48,10 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
     public void onBindViewHolder (@NonNull ViewHolder holder, int position) {
         HomebrewItem currentItem = mHomebrewList.get(position);
 
-        holder.mTitle.setText(String.format("%s %s", currentItem.getName(), currentItem.getVersion()));
+        String prefix = "";
+        if (currentItem.getTrophies() > 0) prefix += "🏆 ";
+        if (currentItem.getAI() > 0) prefix += "🛠 ";
+        holder.mTitle.setText(prefix + currentItem.getName() + " " + currentItem.getVersion());
         holder.mAuthor.setText(currentItem.getAuthor());
         holder.mDescription.setText(currentItem.getDescription());
         holder.mDate.setText(String.format("(%s)", currentItem.getDateString()));

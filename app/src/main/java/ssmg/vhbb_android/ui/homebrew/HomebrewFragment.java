@@ -106,8 +106,11 @@ public class HomebrewFragment extends Fragment {
                             int downloads        = item.optInt(VitaDB.JSON_DOWNLOADS, 0);
                             long size            = item.optLong(VitaDB.JSON_SIZE, 0);
                             long dataSize        = item.optLong(VitaDB.JSON_DATA_SIZE, 0);
+                            int trophies         = item.optInt(VitaDB.JSON_TROPHIES, 0);
+                            int ai               = item.optInt(VitaDB.JSON_AI, 0);
+                            String titleid       = item.optString(VitaDB.JSON_TITLEID, "");
 
-                            mHomebrewList.add(new HomebrewItem(name, iconUrl, version, author, description, longDescription, date, sourceUrl, releaseUrl, url, dataUrl, screenshotsUrl, type, id, downloads, size, dataSize));
+                            mHomebrewList.add(new HomebrewItem(name, iconUrl, version, author, description, longDescription, date, sourceUrl, releaseUrl, url, dataUrl, screenshotsUrl, type, id, downloads, size, dataSize, trophies, ai, titleid));
                         }
 
                         mHomebrewAdapter = new HomebrewAdapter(requireActivity(), mHomebrewList);

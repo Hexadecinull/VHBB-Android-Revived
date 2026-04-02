@@ -35,6 +35,12 @@
     <string name="details_options">Options:</string>
     <string name="details_readme">README</string>
     <string name="menu_data">Data</string>
+    <string name="details_titleid">Title ID:</string>
+    <string name="details_ai">AI Used:</string>
+    <string name="details_ai_yes">Yes</string>
+    <string name="details_ai_no">No</string>
+    <string name="qr_vpk_label">VPK Download QR</string>
+    <string name="qr_data_label">Data Download QR</string>
     <string name="details_readme_loading">Loading README…</string>
     <string name="details_readme_error">Failed to load README.</string>
     <string name="details_closed_source">CLOSED SOURCE</string>

@@ -19,10 +19,11 @@ public class PSPItem extends BaseItem {
     private final int ID;
     private final int Downloads;
     private final long Size;
+    private final int AI;
     private Date Date;
     private String[] ScreenshotsUrl;
 
-    public PSPItem(String name, String iconUrl, String version, String author, String desc, String longDesc, String date, String srcUrl, String relUrl, String url, String screenshots, int type, int id, int downloads, long size) {
+    public PSPItem(String name, String iconUrl, String version, String author, String desc, String longDesc, String date, String srcUrl, String relUrl, String url, String screenshots, int type, int id, int downloads, long size, int ai) {
         super(name, "", version, author, desc, url);
 
         this.IconUrl = PSP.ICONS_PARENT_URL + iconUrl;
@@ -33,6 +34,7 @@ public class PSPItem extends BaseItem {
         this.ID = id;
         this.Downloads = downloads;
         this.Size = size;
+        this.AI = ai;
         this.setDate(date);
 
         if (!screenshots.equals("")) {
@@ -83,6 +85,10 @@ public class PSPItem extends BaseItem {
 
     public long getSize() {
         return Size;
+    }
+
+    public int getAI() {
+        return AI;
     }
 
     public Date getDate() {

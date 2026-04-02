@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import io.noties.markwon.Markwon;
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin;
 import io.noties.markwon.ext.tables.TablePlugin;
+import io.noties.markwon.html.HtmlPlugin;
 import io.noties.markwon.image.picasso.PicassoImagesPlugin;
 import io.noties.markwon.linkify.LinkifyPlugin;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
@@ -106,6 +107,7 @@ public class CBPSDBDetails extends AppCompatActivity {
             readmeContent.setText(R.string.details_readme_loading);
             Markwon markwon = Markwon.builder(this)
                     .usePlugin(PicassoImagesPlugin.create(Picasso.get()))
+                    .usePlugin(HtmlPlugin.create())
                     .usePlugin(StrikethroughPlugin.create())
                     .usePlugin(TablePlugin.create(this))
                     .usePlugin(LinkifyPlugin.create())

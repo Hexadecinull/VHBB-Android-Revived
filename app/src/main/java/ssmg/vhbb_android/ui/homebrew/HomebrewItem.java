@@ -24,10 +24,13 @@ public class HomebrewItem extends BaseItem {
     private final int Downloads;
     private final long Size;
     private final long DataSize;
+    private final int Trophies;
+    private final int AI;
+    private final String TitleID;
     private Date Date;
     private String[] ScreenshotsUrl;
 
-    public HomebrewItem (String name, String iconUrl, String version, String author, String desc, String longDesc, String date, String srcUrl, String relUrl, String url, String dataUrl, String screenshots, int type, int id, int downloads, long size, long dataSize) {
+    public HomebrewItem (String name, String iconUrl, String version, String author, String desc, String longDesc, String date, String srcUrl, String relUrl, String url, String dataUrl, String screenshots, int type, int id, int downloads, long size, long dataSize, int trophies, int ai, String titleid) {
         super(name, "", version, author, desc, url);
 
         this.IconUrl = String.format("%s%s", VitaDB.ICONS_PARENT_URL, iconUrl);
@@ -40,6 +43,9 @@ public class HomebrewItem extends BaseItem {
         this.Downloads = downloads;
         this.Size = size;
         this.DataSize = dataSize;
+        this.Trophies = trophies;
+        this.AI = ai;
+        this.TitleID = titleid;
         this.setDate(date);
 
         if (!screenshots.equals("")) {
@@ -88,6 +94,18 @@ public class HomebrewItem extends BaseItem {
 
     public long getDataSize () {
         return DataSize;
+    }
+
+    public int getTrophies () {
+        return Trophies;
+    }
+
+    public int getAI () {
+        return AI;
+    }
+
+    public String getTitleID () {
+        return TitleID;
     }
 
     public Date getDate () {

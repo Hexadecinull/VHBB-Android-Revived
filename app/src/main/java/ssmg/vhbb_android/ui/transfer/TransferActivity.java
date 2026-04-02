@@ -193,7 +193,7 @@ public class TransferActivity extends AppCompatActivity {
 
         mFtpFileLabel.setOnClickListener(v -> toggleFileList());
         findViewById(R.id.ftp_pick_file_btn).setOnClickListener(v -> mFtpFilePicker.launch("*/*"));
-        findViewById(R.id.ftp_pick_folder_btn).setOnClickListener(v -> mFtpFolderPicker.launch(null));
+        findViewById(R.id.ftp_pick_file_btn).setOnLongClickListener(v -> { mFtpFolderPicker.launch(null); return true; });
         mUsbPickFileBtn.setOnClickListener(v -> mUsbFilePicker.launch("*/*"));
         mUsbPickDestBtn.setOnClickListener(v -> mUsbDirPicker.launch(null));
         mFtpTransferBtn.setOnClickListener(v -> startFtpTransfer());

@@ -47,7 +47,8 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PSPItem currentItem = mPSPList.get(position);
 
-        holder.mTitle.setText(String.format("%s %s", currentItem.getName(), currentItem.getVersion()));
+        String prefix = currentItem.getAI() > 0 ? "🛠 " : "";
+        holder.mTitle.setText(prefix + currentItem.getName() + " " + currentItem.getVersion());
         holder.mAuthor.setText(currentItem.getAuthor());
         holder.mDescription.setText(currentItem.getDescription());
         holder.mDate.setText(String.format("(%s)", currentItem.getDateString()));

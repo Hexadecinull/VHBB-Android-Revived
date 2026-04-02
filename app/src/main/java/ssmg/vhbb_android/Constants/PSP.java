@@ -17,6 +17,7 @@ public class PSP {
     public static final String JSON_SIZE             = "size";
     public static final String JSON_URL              = "url";
     public static final String JSON_SCREENSHOTS      = "screenshots";
+    public static final String JSON_AI               = "ai";
 
     public static final int TYPE_ALL            = 0;
     public static final int TYPE_ORIGINAL_GAMES = 11;
