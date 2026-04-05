@@ -9,9 +9,6 @@ import java.util.Date;
 import ssmg.vhbb_android.BaseItem;
 import ssmg.vhbb_android.Constants.VitaDB;
 
-/**
- * Homebrew item
- */
 public class HomebrewItem extends BaseItem {
 
     private final String IconUrl;
@@ -19,6 +16,8 @@ public class HomebrewItem extends BaseItem {
     private final String SourceUrl;
     private final String ReleaseUrl;
     private final String DataUrl;
+    private final String TitleID;
+    private final String TrailerUrl;
     private final int Type;
     private final int ID;
     private final int Downloads;
@@ -26,11 +25,10 @@ public class HomebrewItem extends BaseItem {
     private final long DataSize;
     private final int Trophies;
     private final int AI;
-    private final String TitleID;
     private Date Date;
     private String[] ScreenshotsUrl;
 
-    public HomebrewItem (String name, String iconUrl, String version, String author, String desc, String longDesc, String date, String srcUrl, String relUrl, String url, String dataUrl, String screenshots, int type, int id, int downloads, long size, long dataSize, int trophies, int ai, String titleid) {
+    public HomebrewItem (String name, String iconUrl, String version, String author, String desc, String longDesc, String date, String srcUrl, String relUrl, String url, String dataUrl, String screenshots, int type, int id, int downloads, long size, long dataSize, int trophies, int ai, String titleid, String trailer) {
         super(name, "", version, author, desc, url);
 
         this.IconUrl = String.format("%s%s", VitaDB.ICONS_PARENT_URL, iconUrl);
@@ -46,6 +44,13 @@ public class HomebrewItem extends BaseItem {
         this.Trophies = trophies;
         this.AI = ai;
         this.TitleID = titleid;
+
+        if (!trailer.isEmpty() && !trailer.equals("0")) {
+            this.TrailerUrl = VitaDB.TRAILER_PARENT_URL + trailer + ".mp4";
+        } else {
+            this.TrailerUrl = "";
+        }
+
         this.setDate(date);
 
         if (!screenshots.equals("")) {
@@ -56,61 +61,21 @@ public class HomebrewItem extends BaseItem {
         }
     }
 
-    public String getIconUrl () {
-        return IconUrl;
-    }
-
-    public String getLongDescription () {
-        return LongDescription;
-    }
-
-    public String getSourceUrl () {
-        return SourceUrl;
-    }
-
-    public String getReleaseUrl () {
-        return ReleaseUrl;
-    }
-
-    public String getDataUrl () {
-        return DataUrl;
-    }
-
-    public int getType () {
-        return Type;
-    }
-
-    public int getID () {
-        return ID;
-    }
-
-    public int getDownloads () {
-        return Downloads;
-    }
-
-    public long getSize () {
-        return Size;
-    }
-
-    public long getDataSize () {
-        return DataSize;
-    }
-
-    public int getTrophies () {
-        return Trophies;
-    }
-
-    public int getAI () {
-        return AI;
-    }
-
-    public String getTitleID () {
-        return TitleID;
-    }
-
-    public Date getDate () {
-        return Date;
-    }
+    public String getIconUrl () { return IconUrl; }
+    public String getLongDescription () { return LongDescription; }
+    public String getSourceUrl () { return SourceUrl; }
+    public String getReleaseUrl () { return ReleaseUrl; }
+    public String getDataUrl () { return DataUrl; }
+    public int getType () { return Type; }
+    public int getID () { return ID; }
+    public int getDownloads () { return Downloads; }
+    public long getSize () { return Size; }
+    public long getDataSize () { return DataSize; }
+    public int getTrophies () { return Trophies; }
+    public int getAI () { return AI; }
+    public String getTitleID () { return TitleID; }
+    public String getTrailerUrl () { return TrailerUrl; }
+    public Date getDate () { return Date; }
 
     public String getDateString () {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -131,8 +96,6 @@ public class HomebrewItem extends BaseItem {
         }
     }
 
-    public String[] getScreenshotsUrl () {
-        return ScreenshotsUrl;
-    }
+    public String[] getScreenshotsUrl () { return ScreenshotsUrl; }
 
 }

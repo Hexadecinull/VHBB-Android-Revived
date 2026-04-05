@@ -1,11 +1,7 @@
 package ssmg.vhbb_android.Constants;
 
-/**
- * Constants relating to VitaDB
- */
 public class VitaDB {
 
-    //region JSON
     public static final String JSON_NAME                = "name";
     public static final String JSON_ICON                = "icon";
     public static final String JSON_VERSION             = "version";
@@ -26,31 +22,23 @@ public class VitaDB {
     public static final String JSON_TITLEID             = "titleid";
     public static final String JSON_TROPHIES            = "trophies";
     public static final String JSON_AI                  = "ai";
-    //endregion
+    public static final String JSON_TRAILER             = "trailer";
 
-
-    //region TYPE
     public static final int TYPE_ALL                = 0;
     public static final int TYPE_ORIGINAL_GAMES     = 1;
     public static final int TYPE_GAME_PORTS         = 2;
     public static final int TYPE_UTILISES           = 4;
     public static final int TYPE_EMULATORS          = 5;
-    //endregion
 
-
-    //region URL
     public static final String PARENT_URL               = "https://www.rinnegatamante.eu/vitadb";
     public static final String HOMEBREW_LIST_JSON_URL   = String.format("%s/list_hbs_json.php", PARENT_URL);
     public static final String ACHIEVEMENTS_URL         = PARENT_URL + "/#/achievement/";
     public static final String PLUGIN_LIST_JSON_URL     = String.format("%s/list_plugins_json.php", PARENT_URL);
     public static final String INFO_PARENT_URL          = String.format("%s/#/info/", PARENT_URL);
     public static final String ICONS_PARENT_URL         = String.format("%s/icons/", PARENT_URL);
-    //endregion
+    public static final String TRAILER_PARENT_URL       = PARENT_URL + "/trailers/";
 
-
-    //region USER-AGENT
     public static final String UA_REQUEST_HEADER        = "User-Agent";
     public static final String UA_REQUEST_VALUE         = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36";
-    //endregion
 
 }

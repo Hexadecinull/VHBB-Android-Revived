@@ -17,6 +17,7 @@
     <dimen name="homebrew_padding_small">4dp</dimen>
     <dimen name="homebrew_desc_margin_def">30dp</dimen>
     <dimen name="homebrew_desc_margin_sec">64dp</dimen>
+    <dimen name="homebrew_desc_margin_tri">96dp</dimen>
 
     <dimen name="details_margin_edge">10dp</dimen>
     <dimen name="details_corner_radius">16dp</dimen>

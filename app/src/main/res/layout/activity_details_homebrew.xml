@@ -151,6 +151,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
+                        android:fontFamily="monospace"
                         android:textColor="@color/textColorTitle"
                         android:textSize="@dimen/text_details_item" />
 
@@ -269,11 +270,19 @@
                     android:layout_below="@id/ll_desc"
                     android:background="@color/colorBackground" />
 
+                <VideoView
+                    android:id="@+id/trailer_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_below="@id/line4"
+                    android:layout_margin="@dimen/details_margin_sc"
+                    android:visibility="gone" />
+
                 <ImageView
                     android:id="@+id/screenshot"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/details_sc_height"
-                    android:layout_below="@id/line4"
+                    android:layout_below="@id/trailer_view"
                     android:layout_margin="@dimen/details_margin_sc"
                     android:paddingBottom="20dp" />
 
@@ -287,6 +296,16 @@
             android:layout_gravity="right|bottom"
             android:layout_margin="6dp"
             android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/trailer"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginRight="2dp"
+                android:background="@android:color/transparent"
+                android:padding="6dp"
+                android:src="@android:drawable/ic_media_play"
+                android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/qrCode"

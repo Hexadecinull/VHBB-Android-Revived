@@ -49,10 +49,31 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
 
         String prefix = currentItem.getAI() > 0 ? "🛠 " : "";
         holder.mTitle.setText(prefix + currentItem.getName() + " " + currentItem.getVersion());
+        holder.mTitle.setSelected(true);
+
         holder.mAuthor.setText(currentItem.getAuthor());
+        holder.mAuthor.setSelected(true);
+
         holder.mDescription.setText(currentItem.getDescription());
         holder.mDate.setText(String.format("(%s)", currentItem.getDateString()));
         holder.mDownloads.setText(String.format(Locale.getDefault(), "%dDLs", currentItem.getDownloads()));
+
+        String typeStr = currentItem.getTypeString();
+        if (!typeStr.isEmpty()) {
+            holder.mType.setVisibility(View.VISIBLE);
+            holder.mType.setText(typeStr);
+        } else {
+            holder.mType.setVisibility(View.GONE);
+        }
+
+        String titleId = currentItem.getTitleID();
+        if (titleId != null && !titleId.isEmpty()) {
+            holder.mTitleId.setVisibility(View.VISIBLE);
+            holder.mTitleId.setText(titleId);
+        } else {
+            holder.mTitleId.setVisibility(View.GONE);
+        }
+
         Picasso.get().load(currentItem.getIconUrl()).fit().centerInside().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(holder.mIcon);
 
         holder.mDownload.setOnClickListener(v -> DownloadUtils.VHBBDownloadManager(mActivity, v.getContext(), Uri.parse(currentItem.getUrl()), currentItem.getName() + ".zip"));
@@ -70,7 +91,7 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTitle, mAuthor, mDescription, mDate, mDownloads;
+        public TextView mTitle, mAuthor, mDescription, mDate, mDownloads, mType, mTitleId;
         public ImageButton mDownload;
         public ImageView mIcon;
         public LinearLayout mContainer;
@@ -82,6 +103,8 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
             mDescription = itemView.findViewById(R.id.textview_desc);
             mDate = itemView.findViewById(R.id.textview_date);
             mDownloads = itemView.findViewById(R.id.textview_downloads);
+            mType = itemView.findViewById(R.id.textview_type_label);
+            mTitleId = itemView.findViewById(R.id.textview_titleid);
             mDownload = itemView.findViewById(R.id.download);
             mIcon = itemView.findViewById(R.id.image);
             mContainer = itemView.findViewById(R.id.ll_main);
@@ -112,7 +135,6 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             mPSPList.clear();
-            //noinspection unchecked
             mPSPList.addAll((ArrayList<PSPItem>) results.values);
             notifyDataSetChanged();
         }
@@ -141,7 +163,6 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             mPSPList.clear();
-            //noinspection unchecked
             mPSPList.addAll((ArrayList<PSPItem>) results.values);
             notifyDataSetChanged();
         }

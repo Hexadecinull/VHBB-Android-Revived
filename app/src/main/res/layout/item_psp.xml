@@ -38,7 +38,7 @@
                 android:layout_height="@dimen/text_title_height"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@id/textview_date"
+                android:layout_toLeftOf="@id/textview_type"
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:ellipsize="marquee"
@@ -54,33 +54,62 @@
                 app:autoSizeStepGranularity="1sp"
                 app:autoSizeTextType="uniform" />
 
-            <TextView
-                android:id="@+id/textview_date"
+            <LinearLayout
+                android:id="@+id/textview_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:paddingLeft="4dp"
-                android:paddingTop="2dp"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/text_date" />
+                android:orientation="vertical"
+                android:gravity="end">
+
+                <TextView
+                    android:id="@+id/textview_type_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="4dp"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_date"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textview_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="4dp"
+                    android:paddingTop="1dp"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_date" />
+
+                <TextView
+                    android:id="@+id/textview_downloads"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_date" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/textview_downloads"
+                android:id="@+id/textview_titleid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textview_date"
-                android:layout_alignParentRight="true"
+                android:layout_below="@+id/textview_name"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/textview_type"
+                android:maxLines="1"
+                android:textSize="10sp"
+                android:fontFamily="monospace"
                 android:textColor="@color/colorAccent"
-                android:textSize="@dimen/text_date" />
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/textview_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textview_name"
+                android:layout_below="@+id/textview_titleid"
                 android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@id/textview_downloads"
+                android:layout_toLeftOf="@id/textview_type"
                 android:maxLines="1"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"

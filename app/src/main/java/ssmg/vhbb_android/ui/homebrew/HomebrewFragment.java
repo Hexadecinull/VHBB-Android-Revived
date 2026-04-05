@@ -55,7 +55,6 @@ public class HomebrewFragment extends Fragment {
     mBottomNav = rootView.findViewById(R.id.bottom_nav);
     mBottomNav.setOnItemSelectedListener(item -> {
         if (mHomebrewAdapter == null) {
-            // The adapter is not yet initialized, so do nothing.
             return false;
         }
 
@@ -109,8 +108,9 @@ public class HomebrewFragment extends Fragment {
                             int trophies         = item.optInt(VitaDB.JSON_TROPHIES, 0);
                             int ai               = item.optInt(VitaDB.JSON_AI, 0);
                             String titleid       = item.optString(VitaDB.JSON_TITLEID, "");
+                            String trailer       = item.optString(VitaDB.JSON_TRAILER, "");
 
-                            mHomebrewList.add(new HomebrewItem(name, iconUrl, version, author, description, longDescription, date, sourceUrl, releaseUrl, url, dataUrl, screenshotsUrl, type, id, downloads, size, dataSize, trophies, ai, titleid));
+                            mHomebrewList.add(new HomebrewItem(name, iconUrl, version, author, description, longDescription, date, sourceUrl, releaseUrl, url, dataUrl, screenshotsUrl, type, id, downloads, size, dataSize, trophies, ai, titleid, trailer));
                         }
 
                         mHomebrewAdapter = new HomebrewAdapter(requireActivity(), mHomebrewList);

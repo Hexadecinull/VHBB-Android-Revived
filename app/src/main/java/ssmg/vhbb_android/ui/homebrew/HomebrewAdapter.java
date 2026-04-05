@@ -52,22 +52,51 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
         if (currentItem.getTrophies() > 0) prefix += "🏆 ";
         if (currentItem.getAI() > 0) prefix += "🛠 ";
         holder.mTitle.setText(prefix + currentItem.getName() + " " + currentItem.getVersion());
+        holder.mTitle.setSelected(true);
+
         holder.mAuthor.setText(currentItem.getAuthor());
+        holder.mAuthor.setSelected(true);
+
         holder.mDescription.setText(currentItem.getDescription());
         holder.mDate.setText(String.format("(%s)", currentItem.getDateString()));
         holder.mDownloads.setText(String.format(Locale.getDefault(), "%dDLs", currentItem.getDownloads()));
+
+        String titleId = currentItem.getTitleID();
+        if (titleId != null && !titleId.isEmpty() && !titleId.equals("AAAAAAAAA")) {
+            holder.mTitleId.setVisibility(View.VISIBLE);
+            holder.mTitleId.setText(titleId);
+        } else {
+            holder.mTitleId.setVisibility(View.GONE);
+        }
+
         Picasso.get().load(currentItem.getIconUrl()).fit().centerInside().into(holder.mIcon);
 
         holder.mDownload.setOnClickListener(v -> DownloadUtils.VHBBDownloadManager(mActivity, v.getContext(), Uri.parse(currentItem.getUrl()), currentItem.getName() + ".vpk"));
 
         String dataUrlID = currentItem.getDataUrl();
-
         holder.mDownloadData.setVisibility(!dataUrlID.equals("") ? View.VISIBLE : View.GONE);
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)holder.mDescription.getLayoutParams();
-        lp.setMargins(0,
-                (int)mActivity.getResources().getDimension(R.dimen.homebrew_padding_small),
-                (int)mActivity.getResources().getDimension(!dataUrlID.equals("") ? R.dimen.homebrew_desc_margin_sec : R.dimen.homebrew_desc_margin_def),
-                0);
+
+        if (currentItem.getTrophies() > 0) {
+            holder.mTrophies.setVisibility(View.VISIBLE);
+            holder.mTrophies.setOnClickListener(v -> {
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(VitaDB.ACHIEVEMENTS_URL + currentItem.getTitleID()));
+                mActivity.startActivity(i);
+            });
+        } else {
+            holder.mTrophies.setVisibility(View.GONE);
+        }
+
+        int descRightMargin;
+        if (currentItem.getTrophies() > 0 && !dataUrlID.equals("")) {
+            descRightMargin = (int) mActivity.getResources().getDimension(R.dimen.homebrew_desc_margin_tri);
+        } else if (!dataUrlID.equals("") || currentItem.getTrophies() > 0) {
+            descRightMargin = (int) mActivity.getResources().getDimension(R.dimen.homebrew_desc_margin_sec);
+        } else {
+            descRightMargin = (int) mActivity.getResources().getDimension(R.dimen.homebrew_desc_margin_def);
+        }
+
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.mDescription.getLayoutParams();
+        lp.setMargins(0, (int) mActivity.getResources().getDimension(R.dimen.homebrew_padding_small), descRightMargin, 0);
         holder.mDescription.setLayoutParams(lp);
 
         if (!dataUrlID.equals("")) holder.mDownloadData.setOnClickListener(v -> DownloadUtils.VHBBDownloadManager(mActivity, v.getContext(), Uri.parse(dataUrlID), dataUrlID.substring(dataUrlID.lastIndexOf("/") + 1)));
@@ -85,8 +114,8 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTitle, mAuthor, mDescription, mDate, mDownloads;
-        public ImageButton mDownload, mDownloadData;
+        public TextView mTitle, mAuthor, mDescription, mDate, mDownloads, mTitleId;
+        public ImageButton mDownload, mDownloadData, mTrophies;
         public ImageView mIcon;
         public LinearLayout mContainer;
 
@@ -97,14 +126,14 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
             mDescription = itemView.findViewById(R.id.textview_desc);
             mDate = itemView.findViewById(R.id.textview_date);
             mDownloads = itemView.findViewById(R.id.textview_downloads);
+            mTitleId = itemView.findViewById(R.id.textview_titleid);
             mDownload = itemView.findViewById(R.id.download);
             mDownloadData = itemView.findViewById(R.id.downloadData);
+            mTrophies = itemView.findViewById(R.id.trophies);
             mIcon = itemView.findViewById(R.id.image);
             mContainer = itemView.findViewById(R.id.ll_main);
         }
     }
-
-    //region Filter
 
     public Filter getSearchFilter () {
         return mSearchFilter;
@@ -118,22 +147,18 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
                 filteredList.addAll(mHomebrewListFull);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
-
                 for (HomebrewItem item : mHomebrewListFull)
                     if (item.getName().toLowerCase().contains(filterPattern))
                         filteredList.add(item);
             }
-
             FilterResults results = new FilterResults();
             results.values = filteredList;
-
             return results;
         }
 
         @Override
         protected void publishResults (CharSequence constraint, FilterResults results) {
             mHomebrewList.clear();
-            //noinspection unchecked
             mHomebrewList.addAll((ArrayList<HomebrewItem>)results.values);
             notifyDataSetChanged();
         }
@@ -154,22 +179,17 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
                     if (String.valueOf(item.getType()).contentEquals(constraint))
                         filteredList.add(item);
             }
-
             FilterResults results = new FilterResults();
             results.values = filteredList;
-
             return results;
         }
 
         @Override
         protected void publishResults (CharSequence constraint, FilterResults results) {
             mHomebrewList.clear();
-            //noinspection unchecked
             mHomebrewList.addAll((ArrayList<HomebrewItem>)results.values);
             notifyDataSetChanged();
         }
     };
-
-    //endregion
 
 }

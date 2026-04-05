@@ -2,8 +2,21 @@
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
-    android:viewportHeight="15">
+    android:viewportHeight="24">
     <path
         android:fillColor="?attr/colorControlNormal"
-        android:pathData="M21.5,1H2.5C1.1,1 0,2.1 0,3.5v8C0,12.9 1.1,14 2.5,14h19C22.9,14 24,12.9 24,11.5v-8C24,2.1 22.9,1 21.5,1ZM5,10H4V9H3V8h1V7h1v1h1v1H5V10ZM7.5,8.5H6.5v-1h1V8.5ZM8.5,8.5H7.5v-1h1V8.5ZM15,3.5h5v8H9v-8ZM20,10.5A1,1,0,1,1,22,10.5A1,1,0,1,1,20,10.5ZM20,6.5A1,1,0,1,1,22,6.5A1,1,0,1,1,20,6.5Z" />
+        android:fillType="evenOdd"
+        android:pathData="M21,5C21.55,5 22,5.45 22,6L22,18C22,18.55 21.55,19 21,19L3,19C2.45,19 2,18.55 2,18L2,6C2,5.45 2.45,5 3,5ZM8,6L16,6L16,17L8,17Z" />
+    <path
+        android:fillColor="?attr/colorControlNormal"
+        android:pathData="M4,11L4,13L5,13L5,14L6,14L6,13L7,13L7,11L6,11L6,10L5,10L5,11Z" />
+    <path
+        android:fillColor="?attr/colorControlNormal"
+        android:pathData="M4.8,8.8C4.8,9.24 4.44,9.6 4,9.6C3.56,9.6 3.2,9.24 3.2,8.8C3.2,8.36 3.56,8 4,8C4.44,8 4.8,8.36 4.8,8.8Z" />
+    <path
+        android:fillColor="?attr/colorControlNormal"
+        android:pathData="M19.5,11L20.5,11L20.5,12L19.5,12ZM20.5,12L21.5,12L21.5,13L20.5,13ZM19.5,13L20.5,13L20.5,14L19.5,14ZM18.5,12L19.5,12L19.5,13L18.5,13Z" />
+    <path
+        android:fillColor="?attr/colorControlNormal"
+        android:pathData="M3,4L6,4L6,5L3,5ZM18,4L21,4L21,5L18,5Z" />
 </vector>

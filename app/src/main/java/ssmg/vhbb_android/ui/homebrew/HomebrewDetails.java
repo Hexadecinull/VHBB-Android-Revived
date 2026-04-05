@@ -6,15 +6,16 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -33,6 +34,7 @@ public class HomebrewDetails extends AppCompatActivity {
 
     String[] ScreenshotsUrl;
     ImageView mScreenshot;
+    VideoView mTrailerView;
 
     Handler cycleHandler = new Handler();
     Runnable cycleRunnable = new Runnable() {
@@ -49,12 +51,13 @@ public class HomebrewDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_homebrew);
 
-        cItem = (HomebrewItem)getIntent().getSerializableExtra("ITEM");
+        cItem = (HomebrewItem) getIntent().getSerializableExtra("ITEM");
         assert cItem != null;
 
         String SourceUrl = cItem.getSourceUrl();
         String ReleaseUrl = cItem.getReleaseUrl();
         String DataUrl = cItem.getDataUrl();
+        String TrailerUrl = cItem.getTrailerUrl();
         ScreenshotsUrl = cItem.getScreenshotsUrl();
 
         Button mSourceBtn = findViewById(R.id.button_source);
@@ -63,15 +66,17 @@ public class HomebrewDetails extends AppCompatActivity {
         ImageButton mDownloadData = findViewById(R.id.downloadData);
         ImageButton mQrCode = findViewById(R.id.qrCode);
         ImageButton mTrophies = findViewById(R.id.trophies);
+        ImageButton mTrailerBtn = findViewById(R.id.trailer);
         mScreenshot = findViewById(R.id.screenshot);
+        mTrailerView = findViewById(R.id.trailer_view);
 
         String prefix = "";
         if (cItem.getTrophies() > 0) prefix += "🏆 ";
         if (cItem.getAI() > 0) prefix += "🛠 ";
-        ((TextView)findViewById(R.id.textview_title)).setText(prefix + cItem.getName() + " " + cItem.getVersion());
-        ((TextView)findViewById(R.id.textview_date)).setText(cItem.getDateString());
-        ((TextView)findViewById(R.id.textview_author)).setText(cItem.getAuthor());
-        ((TextView)findViewById(R.id.textview_desc)).setText(cItem.getLongDescription());
+        ((TextView) findViewById(R.id.textview_title)).setText(prefix + cItem.getName() + " " + cItem.getVersion());
+        ((TextView) findViewById(R.id.textview_date)).setText(cItem.getDateString());
+        ((TextView) findViewById(R.id.textview_author)).setText(cItem.getAuthor());
+        ((TextView) findViewById(R.id.textview_desc)).setText(cItem.getLongDescription());
 
         TextView titleIdView = findViewById(R.id.textview_titleid_value);
         View titleIdSection = findViewById(R.id.ll_titleid);
@@ -88,7 +93,7 @@ public class HomebrewDetails extends AppCompatActivity {
         aiSection.setVisibility(View.VISIBLE);
         aiView.setText(cItem.getAI() > 0 ? getString(R.string.details_ai_yes) : getString(R.string.details_ai_no));
 
-        Picasso.get().load(cItem.getIconUrl()).fit().centerInside().transform(new CropCircleTransformation()).memoryPolicy(MemoryPolicy.NO_CACHE).into((ImageView)findViewById(R.id.image));
+        Picasso.get().load(cItem.getIconUrl()).fit().centerInside().transform(new CropCircleTransformation()).memoryPolicy(MemoryPolicy.NO_CACHE).into((ImageView) findViewById(R.id.image));
 
         int pagesVisibility = !(SourceUrl.equals("") && ReleaseUrl.equals("")) ? View.VISIBLE : View.GONE;
         findViewById(R.id.ll_pages).setVisibility(pagesVisibility);
@@ -120,6 +125,27 @@ public class HomebrewDetails extends AppCompatActivity {
             });
         } else {
             mTrophies.setVisibility(View.GONE);
+        }
+
+        if (!TrailerUrl.isEmpty()) {
+            mTrailerBtn.setVisibility(View.VISIBLE);
+            mTrailerView.setVideoURI(Uri.parse(TrailerUrl));
+            mTrailerView.setOnPreparedListener(mp -> {
+                mp.setLooping(true);
+                mp.setVolume(1f, 1f);
+            });
+            mTrailerBtn.setOnClickListener(v -> {
+                if (mTrailerView.getVisibility() == View.VISIBLE && mTrailerView.isPlaying()) {
+                    mTrailerView.pause();
+                    mTrailerView.setVisibility(View.GONE);
+                } else {
+                    mTrailerView.setVisibility(View.VISIBLE);
+                    mTrailerView.start();
+                }
+            });
+        } else {
+            mTrailerBtn.setVisibility(View.GONE);
+            mTrailerView.setVisibility(View.GONE);
         }
 
         if (ScreenshotsUrl != null)
@@ -167,6 +193,7 @@ public class HomebrewDetails extends AppCompatActivity {
             vpkLabel.setText(getString(R.string.qr_vpk_label));
             vpkLabel.setTextSize(14f);
             vpkLabel.setPadding(0, 0, 0, 8);
+            vpkLabel.setGravity(Gravity.CENTER_HORIZONTAL);
             layout.addView(vpkLabel);
 
             ImageView vpkIv = new ImageView(this);
@@ -179,6 +206,7 @@ public class HomebrewDetails extends AppCompatActivity {
             dataLabel.setText(getString(R.string.qr_data_label));
             dataLabel.setTextSize(14f);
             dataLabel.setPadding(0, 16, 0, 8);
+            dataLabel.setGravity(Gravity.CENTER_HORIZONTAL);
             layout.addView(dataLabel);
 
             ImageView dataIv = new ImageView(this);
@@ -212,6 +240,7 @@ public class HomebrewDetails extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         cycleHandler.removeCallbacks(cycleRunnable);
+        if (mTrailerView != null && mTrailerView.isPlaying()) mTrailerView.pause();
     }
 
 }

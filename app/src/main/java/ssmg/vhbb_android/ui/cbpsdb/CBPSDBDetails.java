@@ -17,6 +17,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import io.noties.markwon.Markwon;
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin;
@@ -25,6 +26,7 @@ import io.noties.markwon.html.HtmlPlugin;
 import io.noties.markwon.image.picasso.PicassoImagesPlugin;
 import io.noties.markwon.linkify.LinkifyPlugin;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+import okhttp3.OkHttpClient;
 
 import java.util.Date;
 
@@ -105,8 +107,28 @@ public class CBPSDBDetails extends AppCompatActivity {
         if (!readmeUrl.isEmpty()) {
             readmeSection.setVisibility(View.VISIBLE);
             readmeContent.setText(R.string.details_readme_loading);
+
+            OkHttpClient shieldsClient = new OkHttpClient.Builder()
+                    .addInterceptor(chain -> {
+                        okhttp3.Request req = chain.request();
+                        String host = req.url().host();
+                        if (host.contains("shields.io") || host.contains("img.shields.io")) {
+                            String originalUrl = req.url().toString();
+                            String pngUrl = originalUrl.contains("?")
+                                    ? originalUrl + "&format=png"
+                                    : originalUrl + ".png";
+                            req = req.newBuilder().url(pngUrl).build();
+                        }
+                        return chain.proceed(req);
+                    })
+                    .build();
+
+            Picasso shieldsPicasso = new Picasso.Builder(this)
+                    .downloader(new com.squareup.picasso.OkHttp3Downloader(shieldsClient))
+                    .build();
+
             Markwon markwon = Markwon.builder(this)
-                    .usePlugin(PicassoImagesPlugin.create(Picasso.get()))
+                    .usePlugin(PicassoImagesPlugin.create(shieldsPicasso))
                     .usePlugin(HtmlPlugin.create())
                     .usePlugin(StrikethroughPlugin.create())
                     .usePlugin(TablePlugin.create(this))

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,6 +31,7 @@ public class PSPDetails extends AppCompatActivity {
 
     String[] ScreenshotsUrl;
     ImageView mScreenshot;
+    VideoView mTrailerView;
 
     Handler cycleHandler = new Handler();
     Runnable cycleRunnable = new Runnable() {
@@ -51,20 +53,48 @@ public class PSPDetails extends AppCompatActivity {
 
         String SourceUrl = cItem.getSourceUrl();
         String ReleaseUrl = cItem.getReleaseUrl();
+        String TrailerUrl = cItem.getTrailerUrl();
         ScreenshotsUrl = cItem.getScreenshotsUrl();
 
         Button mSourceBtn = findViewById(R.id.button_source);
         Button mReleaseBtn = findViewById(R.id.button_release);
         ImageButton mDownload = findViewById(R.id.download);
         ImageButton mQrCode = findViewById(R.id.qrCode);
+        ImageButton mTrailerBtn = findViewById(R.id.trailer);
         mScreenshot = findViewById(R.id.screenshot);
+        mTrailerView = findViewById(R.id.trailer_view);
 
-        ((TextView) findViewById(R.id.textview_title)).setText(String.format("%s %s", cItem.getName(), cItem.getVersion()));
+        String prefix = cItem.getAI() > 0 ? "🛠 " : "";
+        ((TextView) findViewById(R.id.textview_title)).setText(String.format("%s%s %s", prefix, cItem.getName(), cItem.getVersion()));
         ((TextView) findViewById(R.id.textview_date)).setText(cItem.getDateString());
         ((TextView) findViewById(R.id.textview_author)).setText(cItem.getAuthor());
         ((TextView) findViewById(R.id.textview_desc)).setText(cItem.getLongDescription());
 
+        TextView typeBadge = findViewById(R.id.textview_type_badge);
+        String typeStr = cItem.getTypeString();
+        if (!typeStr.isEmpty()) {
+            typeBadge.setVisibility(View.VISIBLE);
+            typeBadge.setText(typeStr);
+        } else {
+            typeBadge.setVisibility(View.GONE);
+        }
+
+        TextView titleIdView = findViewById(R.id.textview_titleid_value);
+        View titleIdSection = findViewById(R.id.ll_titleid);
+        String titleID = cItem.getTitleID();
+        if (titleID != null && !titleID.isEmpty()) {
+            titleIdSection.setVisibility(View.VISIBLE);
+            titleIdView.setText(titleID);
+        } else {
+            titleIdSection.setVisibility(View.GONE);
+        }
+
         Picasso.get().load(cItem.getIconUrl()).fit().centerInside().transform(new CropCircleTransformation()).memoryPolicy(MemoryPolicy.NO_CACHE).into((ImageView) findViewById(R.id.image));
+
+        TextView aiView = findViewById(R.id.textview_ai_value);
+        View aiSection = findViewById(R.id.ll_ai);
+        aiSection.setVisibility(View.VISIBLE);
+        aiView.setText(cItem.getAI() > 0 ? getString(R.string.details_ai_yes) : getString(R.string.details_ai_no));
 
         int pagesVisibility = !(SourceUrl.equals("") && ReleaseUrl.equals("")) ? View.VISIBLE : View.GONE;
         findViewById(R.id.ll_pages).setVisibility(pagesVisibility);
@@ -77,6 +107,27 @@ public class PSPDetails extends AppCompatActivity {
 
         mDownload.setOnClickListener(v -> DownloadUtils.VHBBDownloadManager(this, this, Uri.parse(cItem.getUrl()), cItem.getName() + ".zip"));
         mQrCode.setOnClickListener(v -> showQrDialog(cItem.getUrl(), cItem.getName()));
+
+        if (!TrailerUrl.isEmpty()) {
+            mTrailerBtn.setVisibility(View.VISIBLE);
+            mTrailerView.setVideoURI(Uri.parse(TrailerUrl));
+            mTrailerView.setOnPreparedListener(mp -> {
+                mp.setLooping(true);
+                mp.setVolume(1f, 1f);
+            });
+            mTrailerBtn.setOnClickListener(v -> {
+                if (mTrailerView.getVisibility() == View.VISIBLE && mTrailerView.isPlaying()) {
+                    mTrailerView.pause();
+                    mTrailerView.setVisibility(View.GONE);
+                } else {
+                    mTrailerView.setVisibility(View.VISIBLE);
+                    mTrailerView.start();
+                }
+            });
+        } else {
+            mTrailerBtn.setVisibility(View.GONE);
+            mTrailerView.setVisibility(View.GONE);
+        }
 
         if (ScreenshotsUrl != null)
             if (ScreenshotsUrl.length == 1) Picasso.get().load(ScreenshotsUrl[0]).fit().centerInside().memoryPolicy(MemoryPolicy.NO_CACHE).into(mScreenshot);
@@ -112,9 +163,7 @@ public class PSPDetails extends AppCompatActivity {
     }
 
     private void cycleScreenshot() {
-        if (sc_index >= ScreenshotsUrl.length)
-            sc_index = 0;
-
+        if (sc_index >= ScreenshotsUrl.length) sc_index = 0;
         Picasso.get().load(ScreenshotsUrl[sc_index]).fit().centerInside().memoryPolicy(MemoryPolicy.NO_CACHE).into(mScreenshot);
         sc_index++;
     }
@@ -130,6 +179,7 @@ public class PSPDetails extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         cycleHandler.removeCallbacks(cycleRunnable);
+        if (mTrailerView != null && mTrailerView.isPlaying()) mTrailerView.pause();
     }
 
 }

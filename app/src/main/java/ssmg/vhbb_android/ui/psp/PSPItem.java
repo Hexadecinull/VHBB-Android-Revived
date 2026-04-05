@@ -15,6 +15,8 @@ public class PSPItem extends BaseItem {
     private final String LongDescription;
     private final String SourceUrl;
     private final String ReleaseUrl;
+    private final String TitleID;
+    private final String TrailerUrl;
     private final int Type;
     private final int ID;
     private final int Downloads;
@@ -23,7 +25,7 @@ public class PSPItem extends BaseItem {
     private Date Date;
     private String[] ScreenshotsUrl;
 
-    public PSPItem(String name, String iconUrl, String version, String author, String desc, String longDesc, String date, String srcUrl, String relUrl, String url, String screenshots, int type, int id, int downloads, long size, int ai) {
+    public PSPItem(String name, String iconUrl, String version, String author, String desc, String longDesc, String date, String srcUrl, String relUrl, String url, String screenshots, int type, int id, int downloads, long size, int ai, String titleId, String trailer) {
         super(name, "", version, author, desc, url);
 
         this.IconUrl = PSP.ICONS_PARENT_URL + iconUrl;
@@ -35,6 +37,14 @@ public class PSPItem extends BaseItem {
         this.Downloads = downloads;
         this.Size = size;
         this.AI = ai;
+        this.TitleID = titleId;
+
+        if (!trailer.isEmpty() && !trailer.equals("0")) {
+            this.TrailerUrl = PSP.TRAILER_PARENT_URL + trailer + ".mp4";
+        } else {
+            this.TrailerUrl = "";
+        }
+
         this.setDate(date);
 
         if (!screenshots.equals("")) {
@@ -45,25 +55,13 @@ public class PSPItem extends BaseItem {
         }
     }
 
-    public String getIconUrl() {
-        return IconUrl;
-    }
-
-    public String getLongDescription() {
-        return LongDescription;
-    }
-
-    public String getSourceUrl() {
-        return SourceUrl;
-    }
-
-    public String getReleaseUrl() {
-        return ReleaseUrl;
-    }
-
-    public int getType() {
-        return Type;
-    }
+    public String getIconUrl() { return IconUrl; }
+    public String getLongDescription() { return LongDescription; }
+    public String getSourceUrl() { return SourceUrl; }
+    public String getReleaseUrl() { return ReleaseUrl; }
+    public String getTitleID() { return TitleID; }
+    public String getTrailerUrl() { return TrailerUrl; }
+    public int getType() { return Type; }
 
     public String getTypeString() {
         switch (Type) {
@@ -75,25 +73,11 @@ public class PSPItem extends BaseItem {
         }
     }
 
-    public int getID() {
-        return ID;
-    }
-
-    public int getDownloads() {
-        return Downloads;
-    }
-
-    public long getSize() {
-        return Size;
-    }
-
-    public int getAI() {
-        return AI;
-    }
-
-    public Date getDate() {
-        return Date;
-    }
+    public int getID() { return ID; }
+    public int getDownloads() { return Downloads; }
+    public long getSize() { return Size; }
+    public int getAI() { return AI; }
+    public Date getDate() { return Date; }
 
     public String getDateString() {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -114,8 +98,6 @@ public class PSPItem extends BaseItem {
         }
     }
 
-    public String[] getScreenshotsUrl() {
-        return ScreenshotsUrl;
-    }
+    public String[] getScreenshotsUrl() { return ScreenshotsUrl; }
 
 }
