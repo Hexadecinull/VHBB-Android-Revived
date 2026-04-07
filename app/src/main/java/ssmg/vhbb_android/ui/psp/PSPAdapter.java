@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import ssmg.vhbb_android.Constants.PSP;
 import ssmg.vhbb_android.R;
+import ssmg.vhbb_android.ui.MarqueeTextView;
 import ssmg.vhbb_android.Utils.DownloadUtils;
 
 public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
@@ -49,11 +50,7 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
 
         String prefix = currentItem.getAI() > 0 ? "🛠 " : "";
         holder.mTitle.setText(prefix + currentItem.getName() + " " + currentItem.getVersion());
-        holder.mTitle.setSelected(true);
-
         holder.mAuthor.setText(currentItem.getAuthor());
-        holder.mAuthor.setSelected(true);
-
         holder.mDescription.setText(currentItem.getDescription());
         holder.mDate.setText(String.format("(%s)", currentItem.getDateString()));
         holder.mDownloads.setText(String.format(Locale.getDefault(), "%dDLs", currentItem.getDownloads()));
@@ -64,14 +61,6 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
             holder.mType.setText(typeStr);
         } else {
             holder.mType.setVisibility(View.GONE);
-        }
-
-        String titleId = currentItem.getTitleID();
-        if (titleId != null && !titleId.isEmpty()) {
-            holder.mTitleId.setVisibility(View.VISIBLE);
-            holder.mTitleId.setText(titleId);
-        } else {
-            holder.mTitleId.setVisibility(View.GONE);
         }
 
         Picasso.get().load(currentItem.getIconUrl()).fit().centerInside().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(holder.mIcon);
@@ -91,7 +80,8 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTitle, mAuthor, mDescription, mDate, mDownloads, mType, mTitleId;
+        public MarqueeTextView mTitle, mAuthor;
+        public TextView mDescription, mDate, mDownloads, mType;
         public ImageButton mDownload;
         public ImageView mIcon;
         public LinearLayout mContainer;
@@ -104,7 +94,6 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
             mDate = itemView.findViewById(R.id.textview_date);
             mDownloads = itemView.findViewById(R.id.textview_downloads);
             mType = itemView.findViewById(R.id.textview_type_label);
-            mTitleId = itemView.findViewById(R.id.textview_titleid);
             mDownload = itemView.findViewById(R.id.download);
             mIcon = itemView.findViewById(R.id.image);
             mContainer = itemView.findViewById(R.id.ll_main);

@@ -97,4 +97,11 @@
 
     <string name="permutils_title">Permission needed</string>
     <string name="permutils_message">Storage permission is needed to download files</string>
+
+    <string name="trophy_title">Trophies</string>
+    <string name="filebrowser_pick_file">Pick File</string>
+    <string name="filebrowser_pick_folder">Pick Folder</string>
+    <string name="filebrowser_select_folder">Select This Folder</string>
+    <string name="filebrowser_parent_dir">Parent directory</string>
+    <string name="filebrowser_folder">Folder</string>
 </resources>

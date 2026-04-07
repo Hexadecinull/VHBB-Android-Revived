@@ -17,7 +17,6 @@ public class HomebrewItem extends BaseItem {
     private final String ReleaseUrl;
     private final String DataUrl;
     private final String TitleID;
-    private final String TrailerUrl;
     private final int Type;
     private final int ID;
     private final int Downloads;
@@ -28,7 +27,7 @@ public class HomebrewItem extends BaseItem {
     private Date Date;
     private String[] ScreenshotsUrl;
 
-    public HomebrewItem (String name, String iconUrl, String version, String author, String desc, String longDesc, String date, String srcUrl, String relUrl, String url, String dataUrl, String screenshots, int type, int id, int downloads, long size, long dataSize, int trophies, int ai, String titleid, String trailer) {
+    public HomebrewItem(String name, String iconUrl, String version, String author, String desc, String longDesc, String date, String srcUrl, String relUrl, String url, String dataUrl, String screenshots, int type, int id, int downloads, long size, long dataSize, int trophies, int ai, String titleid, String trailer) {
         super(name, "", version, author, desc, url);
 
         this.IconUrl = String.format("%s%s", VitaDB.ICONS_PARENT_URL, iconUrl);
@@ -44,40 +43,47 @@ public class HomebrewItem extends BaseItem {
         this.Trophies = trophies;
         this.AI = ai;
         this.TitleID = titleid;
-
-        if (!trailer.isEmpty() && !trailer.equals("0")) {
-            this.TrailerUrl = VitaDB.TRAILER_PARENT_URL + trailer + ".mp4";
-        } else {
-            this.TrailerUrl = "";
-        }
-
         this.setDate(date);
 
+        String[] imageUrls = null;
         if (!screenshots.equals("")) {
             String[] scArray = screenshots.split(";");
             for (int i = 0; i < scArray.length; i++)
                 scArray[i] = String.format("%s/%s", VitaDB.PARENT_URL, scArray[i]);
-            this.ScreenshotsUrl = scArray;
+            imageUrls = scArray;
+        }
+
+        if (!trailer.isEmpty() && !trailer.equals("0")) {
+            String trailerUrlFull = VitaDB.TRAILER_PARENT_URL + trailer + ".mp4";
+            if (imageUrls != null) {
+                String[] combined = new String[imageUrls.length + 1];
+                combined[0] = trailerUrlFull;
+                System.arraycopy(imageUrls, 0, combined, 1, imageUrls.length);
+                this.ScreenshotsUrl = combined;
+            } else {
+                this.ScreenshotsUrl = new String[]{trailerUrlFull};
+            }
+        } else {
+            this.ScreenshotsUrl = imageUrls;
         }
     }
 
-    public String getIconUrl () { return IconUrl; }
-    public String getLongDescription () { return LongDescription; }
-    public String getSourceUrl () { return SourceUrl; }
-    public String getReleaseUrl () { return ReleaseUrl; }
-    public String getDataUrl () { return DataUrl; }
-    public int getType () { return Type; }
-    public int getID () { return ID; }
-    public int getDownloads () { return Downloads; }
-    public long getSize () { return Size; }
-    public long getDataSize () { return DataSize; }
-    public int getTrophies () { return Trophies; }
-    public int getAI () { return AI; }
-    public String getTitleID () { return TitleID; }
-    public String getTrailerUrl () { return TrailerUrl; }
-    public Date getDate () { return Date; }
+    public String getIconUrl() { return IconUrl; }
+    public String getLongDescription() { return LongDescription; }
+    public String getSourceUrl() { return SourceUrl; }
+    public String getReleaseUrl() { return ReleaseUrl; }
+    public String getDataUrl() { return DataUrl; }
+    public int getType() { return Type; }
+    public int getID() { return ID; }
+    public int getDownloads() { return Downloads; }
+    public long getSize() { return Size; }
+    public long getDataSize() { return DataSize; }
+    public int getTrophies() { return Trophies; }
+    public int getAI() { return AI; }
+    public String getTitleID() { return TitleID; }
+    public Date getDate() { return Date; }
 
-    public String getDateString () {
+    public String getDateString() {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             return dateFormat.format(this.Date);
@@ -87,7 +93,7 @@ public class HomebrewItem extends BaseItem {
         return "1970-01-01";
     }
 
-    private void setDate (String date) {
+    private void setDate(String date) {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             this.Date = dateFormat.parse(date);
@@ -96,6 +102,6 @@ public class HomebrewItem extends BaseItem {
         }
     }
 
-    public String[] getScreenshotsUrl () { return ScreenshotsUrl; }
+    public String[] getScreenshotsUrl() { return ScreenshotsUrl; }
 
 }

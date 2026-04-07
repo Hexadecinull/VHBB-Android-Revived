@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
     android:orientation="vertical"
-    android:fitsSystemWindows="true"
     tools:context=".ui.transfer.TransferActivity"
     tools:ignore="RtlHardcoded,RtlSymmetry,HardcodedText">
 

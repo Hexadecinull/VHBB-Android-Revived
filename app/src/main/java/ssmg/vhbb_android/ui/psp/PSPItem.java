@@ -16,7 +16,6 @@ public class PSPItem extends BaseItem {
     private final String SourceUrl;
     private final String ReleaseUrl;
     private final String TitleID;
-    private final String TrailerUrl;
     private final int Type;
     private final int ID;
     private final int Downloads;
@@ -38,20 +37,28 @@ public class PSPItem extends BaseItem {
         this.Size = size;
         this.AI = ai;
         this.TitleID = titleId;
-
-        if (!trailer.isEmpty() && !trailer.equals("0")) {
-            this.TrailerUrl = PSP.TRAILER_PARENT_URL + trailer + ".mp4";
-        } else {
-            this.TrailerUrl = "";
-        }
-
         this.setDate(date);
 
+        String[] imageUrls = null;
         if (!screenshots.equals("")) {
             String[] scArray = screenshots.split(";");
             for (int i = 0; i < scArray.length; i++)
                 scArray[i] = PSP.PARENT_URL + "/" + scArray[i];
-            this.ScreenshotsUrl = scArray;
+            imageUrls = scArray;
+        }
+
+        if (!trailer.isEmpty() && !trailer.equals("0")) {
+            String trailerUrlFull = PSP.TRAILER_PARENT_URL + trailer + ".mp4";
+            if (imageUrls != null) {
+                String[] combined = new String[imageUrls.length + 1];
+                combined[0] = trailerUrlFull;
+                System.arraycopy(imageUrls, 0, combined, 1, imageUrls.length);
+                this.ScreenshotsUrl = combined;
+            } else {
+                this.ScreenshotsUrl = new String[]{trailerUrlFull};
+            }
+        } else {
+            this.ScreenshotsUrl = imageUrls;
         }
     }
 
@@ -60,7 +67,6 @@ public class PSPItem extends BaseItem {
     public String getSourceUrl() { return SourceUrl; }
     public String getReleaseUrl() { return ReleaseUrl; }
     public String getTitleID() { return TitleID; }
-    public String getTrailerUrl() { return TrailerUrl; }
     public int getType() { return Type; }
 
     public String getTypeString() {

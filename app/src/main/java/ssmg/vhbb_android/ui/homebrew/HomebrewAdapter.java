@@ -23,6 +23,8 @@ import java.util.Locale;
 
 import ssmg.vhbb_android.Constants.VitaDB;
 import ssmg.vhbb_android.R;
+import ssmg.vhbb_android.ui.MarqueeTextView;
+import ssmg.vhbb_android.ui.TrophyWebActivity;
 import ssmg.vhbb_android.Utils.DownloadUtils;
 
 public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHolder> {
@@ -31,7 +33,7 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
     private final ArrayList<HomebrewItem> mHomebrewList;
     private final ArrayList<HomebrewItem> mHomebrewListFull;
 
-    public HomebrewAdapter (Activity activity, ArrayList<HomebrewItem> homebrewList) {
+    public HomebrewAdapter(Activity activity, ArrayList<HomebrewItem> homebrewList) {
         this.mActivity = activity;
         this.mHomebrewList = homebrewList;
         this.mHomebrewListFull = new ArrayList<>(mHomebrewList);
@@ -39,35 +41,24 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder (@NonNull ViewGroup viewGroup, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_homebrew, viewGroup, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder (@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HomebrewItem currentItem = mHomebrewList.get(position);
 
         String prefix = "";
         if (currentItem.getTrophies() > 0) prefix += "🏆 ";
         if (currentItem.getAI() > 0) prefix += "🛠 ";
         holder.mTitle.setText(prefix + currentItem.getName() + " " + currentItem.getVersion());
-        holder.mTitle.setSelected(true);
 
         holder.mAuthor.setText(currentItem.getAuthor());
-        holder.mAuthor.setSelected(true);
-
         holder.mDescription.setText(currentItem.getDescription());
         holder.mDate.setText(String.format("(%s)", currentItem.getDateString()));
         holder.mDownloads.setText(String.format(Locale.getDefault(), "%dDLs", currentItem.getDownloads()));
-
-        String titleId = currentItem.getTitleID();
-        if (titleId != null && !titleId.isEmpty() && !titleId.equals("AAAAAAAAA")) {
-            holder.mTitleId.setVisibility(View.VISIBLE);
-            holder.mTitleId.setText(titleId);
-        } else {
-            holder.mTitleId.setVisibility(View.GONE);
-        }
 
         Picasso.get().load(currentItem.getIconUrl()).fit().centerInside().into(holder.mIcon);
 
@@ -79,7 +70,9 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
         if (currentItem.getTrophies() > 0) {
             holder.mTrophies.setVisibility(View.VISIBLE);
             holder.mTrophies.setOnClickListener(v -> {
-                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(VitaDB.ACHIEVEMENTS_URL + currentItem.getTitleID()));
+                Intent i = new Intent(mActivity, TrophyWebActivity.class);
+                i.putExtra("TITLE_ID", currentItem.getTitleID());
+                i.putExtra("NAME", currentItem.getName());
                 mActivity.startActivity(i);
             });
         } else {
@@ -109,24 +102,24 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
     }
 
     @Override
-    public int getItemCount () {
+    public int getItemCount() {
         return mHomebrewList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTitle, mAuthor, mDescription, mDate, mDownloads, mTitleId;
+        public MarqueeTextView mTitle, mAuthor;
+        public TextView mDescription, mDate, mDownloads;
         public ImageButton mDownload, mDownloadData, mTrophies;
         public ImageView mIcon;
         public LinearLayout mContainer;
 
-        public ViewHolder (View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.textview_name);
             mAuthor = itemView.findViewById(R.id.textview_author);
             mDescription = itemView.findViewById(R.id.textview_desc);
             mDate = itemView.findViewById(R.id.textview_date);
             mDownloads = itemView.findViewById(R.id.textview_downloads);
-            mTitleId = itemView.findViewById(R.id.textview_titleid);
             mDownload = itemView.findViewById(R.id.download);
             mDownloadData = itemView.findViewById(R.id.downloadData);
             mTrophies = itemView.findViewById(R.id.trophies);
@@ -135,13 +128,13 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
         }
     }
 
-    public Filter getSearchFilter () {
+    public Filter getSearchFilter() {
         return mSearchFilter;
     }
 
     private final Filter mSearchFilter = new Filter() {
         @Override
-        protected FilterResults performFiltering (CharSequence constraint) {
+        protected FilterResults performFiltering(CharSequence constraint) {
             ArrayList<HomebrewItem> filteredList = new ArrayList<>();
             if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(mHomebrewListFull);
@@ -157,20 +150,20 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
         }
 
         @Override
-        protected void publishResults (CharSequence constraint, FilterResults results) {
+        protected void publishResults(CharSequence constraint, FilterResults results) {
             mHomebrewList.clear();
-            mHomebrewList.addAll((ArrayList<HomebrewItem>)results.values);
+            mHomebrewList.addAll((ArrayList<HomebrewItem>) results.values);
             notifyDataSetChanged();
         }
     };
 
-    public Filter getTypeFilter () {
+    public Filter getTypeFilter() {
         return mTypeFilter;
     }
 
     private final Filter mTypeFilter = new Filter() {
         @Override
-        protected FilterResults performFiltering (CharSequence constraint) {
+        protected FilterResults performFiltering(CharSequence constraint) {
             ArrayList<HomebrewItem> filteredList = new ArrayList<>();
             if (constraint == null || constraint.length() == 0 || constraint.equals(String.valueOf(VitaDB.TYPE_ALL))) {
                 filteredList.addAll(mHomebrewListFull);
@@ -185,9 +178,9 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
         }
 
         @Override
-        protected void publishResults (CharSequence constraint, FilterResults results) {
+        protected void publishResults(CharSequence constraint, FilterResults results) {
             mHomebrewList.clear();
-            mHomebrewList.addAll((ArrayList<HomebrewItem>)results.values);
+            mHomebrewList.addAll((ArrayList<HomebrewItem>) results.values);
             notifyDataSetChanged();
         }
     };

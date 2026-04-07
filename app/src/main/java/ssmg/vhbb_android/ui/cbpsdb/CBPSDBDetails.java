@@ -112,11 +112,16 @@ public class CBPSDBDetails extends AppCompatActivity {
                     .addInterceptor(chain -> {
                         okhttp3.Request req = chain.request();
                         String host = req.url().host();
-                        if (host.contains("shields.io") || host.contains("img.shields.io")) {
+                        if (host.contains("shields.io")) {
                             String originalUrl = req.url().toString();
-                            String pngUrl = originalUrl.contains("?")
-                                    ? originalUrl + "&format=png"
-                                    : originalUrl + ".png";
+                            String pngUrl;
+                            if (originalUrl.contains(".svg")) {
+                                pngUrl = originalUrl.replace(".svg", ".png");
+                            } else if (originalUrl.contains("?")) {
+                                pngUrl = originalUrl + "&format=png";
+                            } else {
+                                pngUrl = originalUrl + ".png";
+                            }
                             req = req.newBuilder().url(pngUrl).build();
                         }
                         return chain.proceed(req);

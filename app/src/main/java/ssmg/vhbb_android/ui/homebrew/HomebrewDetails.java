@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,24 +21,22 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
-import ssmg.vhbb_android.Constants.VitaDB;
 import ssmg.vhbb_android.R;
 import ssmg.vhbb_android.Utils.DownloadUtils;
 import ssmg.vhbb_android.ui.FullscreenImageActivity;
+import ssmg.vhbb_android.ui.TrophyWebActivity;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class HomebrewDetails extends AppCompatActivity {
 
     HomebrewItem cItem;
-
     String[] ScreenshotsUrl;
     ImageView mScreenshot;
-    VideoView mTrailerView;
 
     Handler cycleHandler = new Handler();
     Runnable cycleRunnable = new Runnable() {
         @Override
-        public void run () {
+        public void run() {
             cycleScreenshot();
             cycleHandler.postDelayed(this, 5000);
         }
@@ -47,7 +44,7 @@ public class HomebrewDetails extends AppCompatActivity {
     int sc_index = 0;
 
     @Override
-    protected void onCreate (Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_homebrew);
 
@@ -57,7 +54,6 @@ public class HomebrewDetails extends AppCompatActivity {
         String SourceUrl = cItem.getSourceUrl();
         String ReleaseUrl = cItem.getReleaseUrl();
         String DataUrl = cItem.getDataUrl();
-        String TrailerUrl = cItem.getTrailerUrl();
         ScreenshotsUrl = cItem.getScreenshotsUrl();
 
         Button mSourceBtn = findViewById(R.id.button_source);
@@ -66,9 +62,7 @@ public class HomebrewDetails extends AppCompatActivity {
         ImageButton mDownloadData = findViewById(R.id.downloadData);
         ImageButton mQrCode = findViewById(R.id.qrCode);
         ImageButton mTrophies = findViewById(R.id.trophies);
-        ImageButton mTrailerBtn = findViewById(R.id.trailer);
         mScreenshot = findViewById(R.id.screenshot);
-        mTrailerView = findViewById(R.id.trailer_view);
 
         String prefix = "";
         if (cItem.getTrophies() > 0) prefix += "🏆 ";
@@ -79,13 +73,12 @@ public class HomebrewDetails extends AppCompatActivity {
         ((TextView) findViewById(R.id.textview_desc)).setText(cItem.getLongDescription());
 
         TextView titleIdView = findViewById(R.id.textview_titleid_value);
-        View titleIdSection = findViewById(R.id.ll_titleid);
         String titleID = cItem.getTitleID();
         if (titleID != null && !titleID.isEmpty() && !titleID.equals("AAAAAAAAA")) {
-            titleIdSection.setVisibility(View.VISIBLE);
+            titleIdView.setVisibility(View.VISIBLE);
             titleIdView.setText(titleID);
         } else {
-            titleIdSection.setVisibility(View.GONE);
+            titleIdView.setVisibility(View.GONE);
         }
 
         TextView aiView = findViewById(R.id.textview_ai_value);
@@ -120,48 +113,46 @@ public class HomebrewDetails extends AppCompatActivity {
         if (cItem.getTrophies() > 0) {
             mTrophies.setVisibility(View.VISIBLE);
             mTrophies.setOnClickListener(v -> {
-                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(VitaDB.ACHIEVEMENTS_URL + cItem.getTitleID()));
+                Intent i = new Intent(this, TrophyWebActivity.class);
+                i.putExtra("TITLE_ID", cItem.getTitleID());
+                i.putExtra("NAME", cItem.getName());
                 startActivity(i);
             });
         } else {
             mTrophies.setVisibility(View.GONE);
         }
 
-        if (!TrailerUrl.isEmpty()) {
-            mTrailerBtn.setVisibility(View.VISIBLE);
-            mTrailerView.setVideoURI(Uri.parse(TrailerUrl));
-            mTrailerView.setOnPreparedListener(mp -> {
-                mp.setLooping(true);
-                mp.setVolume(1f, 1f);
-            });
-            mTrailerBtn.setOnClickListener(v -> {
-                if (mTrailerView.getVisibility() == View.VISIBLE && mTrailerView.isPlaying()) {
-                    mTrailerView.pause();
-                    mTrailerView.setVisibility(View.GONE);
-                } else {
-                    mTrailerView.setVisibility(View.VISIBLE);
-                    mTrailerView.start();
-                }
-            });
-        } else {
-            mTrailerBtn.setVisibility(View.GONE);
-            mTrailerView.setVisibility(View.GONE);
-        }
-
-        if (ScreenshotsUrl != null)
-            if (ScreenshotsUrl.length == 1) Picasso.get().load(ScreenshotsUrl[0]).fit().centerInside().memoryPolicy(MemoryPolicy.NO_CACHE).into(mScreenshot);
-            else cycleHandler.postDelayed(cycleRunnable, 0);
-        else mScreenshot.setVisibility(View.GONE);
-
         if (ScreenshotsUrl != null) {
+            String firstUrl = ScreenshotsUrl[0];
+            if (firstUrl.endsWith(".mp4")) {
+                mScreenshot.setVisibility(View.GONE);
+                mScreenshot.setOnClickListener(v -> openFullscreen(0));
+                if (ScreenshotsUrl.length > 1) {
+                    sc_index = 1;
+                    cycleHandler.postDelayed(cycleRunnable, 0);
+                    mScreenshot.setVisibility(View.VISIBLE);
+                }
+            } else {
+                if (ScreenshotsUrl.length == 1) {
+                    Picasso.get().load(firstUrl).fit().centerInside().memoryPolicy(MemoryPolicy.NO_CACHE).into(mScreenshot);
+                } else {
+                    cycleHandler.postDelayed(cycleRunnable, 0);
+                }
+            }
             mScreenshot.setOnClickListener(v -> {
                 cycleHandler.removeCallbacks(cycleRunnable);
-                Intent fullscreenIntent = new Intent(this, FullscreenImageActivity.class);
-                fullscreenIntent.putExtra("URLS", ScreenshotsUrl);
-                fullscreenIntent.putExtra("INDEX", sc_index == 0 ? 0 : sc_index - 1);
-                startActivity(fullscreenIntent);
+                openFullscreen(sc_index == 0 ? 0 : sc_index - 1);
             });
+        } else {
+            mScreenshot.setVisibility(View.GONE);
         }
+    }
+
+    private void openFullscreen(int index) {
+        Intent fullscreenIntent = new Intent(this, FullscreenImageActivity.class);
+        fullscreenIntent.putExtra("URLS", ScreenshotsUrl);
+        fullscreenIntent.putExtra("INDEX", index);
+        startActivity(fullscreenIntent);
     }
 
     private void showSingleQrDialog(String url, String name) {
@@ -198,8 +189,7 @@ public class HomebrewDetails extends AppCompatActivity {
 
             ImageView vpkIv = new ImageView(this);
             vpkIv.setImageBitmap(vpkBmp);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f);
-            vpkIv.setLayoutParams(lp);
+            vpkIv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f));
             layout.addView(vpkIv);
 
             TextView dataLabel = new TextView(this);
@@ -211,8 +201,7 @@ public class HomebrewDetails extends AppCompatActivity {
 
             ImageView dataIv = new ImageView(this);
             dataIv.setImageBitmap(dataBmp);
-            LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f);
-            dataIv.setLayoutParams(lp2);
+            dataIv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f));
             layout.addView(dataIv);
 
             new AlertDialog.Builder(this)
@@ -223,9 +212,13 @@ public class HomebrewDetails extends AppCompatActivity {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    private void cycleScreenshot () {
+    private void cycleScreenshot() {
+        if (ScreenshotsUrl == null) return;
         if (sc_index >= ScreenshotsUrl.length) sc_index = 0;
-        Picasso.get().load(ScreenshotsUrl[sc_index]).fit().centerInside().memoryPolicy(MemoryPolicy.NO_CACHE).into(mScreenshot);
+        String url = ScreenshotsUrl[sc_index];
+        if (!url.endsWith(".mp4")) {
+            Picasso.get().load(url).fit().centerInside().memoryPolicy(MemoryPolicy.NO_CACHE).into(mScreenshot);
+        }
         sc_index++;
     }
 
@@ -240,7 +233,6 @@ public class HomebrewDetails extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         cycleHandler.removeCallbacks(cycleRunnable);
-        if (mTrailerView != null && mTrailerView.isPlaying()) mTrailerView.pause();
     }
 
 }
