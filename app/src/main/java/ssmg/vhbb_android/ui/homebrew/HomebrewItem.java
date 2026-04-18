@@ -57,8 +57,8 @@ public class HomebrewItem extends BaseItem {
             String trailerUrlFull = VitaDB.TRAILER_PARENT_URL + trailer + ".mp4";
             if (imageUrls != null) {
                 String[] combined = new String[imageUrls.length + 1];
-                combined[0] = trailerUrlFull;
-                System.arraycopy(imageUrls, 0, combined, 1, imageUrls.length);
+                System.arraycopy(imageUrls, 0, combined, 0, imageUrls.length);
+                combined[imageUrls.length] = trailerUrlFull;
                 this.ScreenshotsUrl = combined;
             } else {
                 this.ScreenshotsUrl = new String[]{trailerUrlFull};

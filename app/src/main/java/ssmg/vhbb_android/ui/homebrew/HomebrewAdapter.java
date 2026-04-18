@@ -23,8 +23,7 @@ import java.util.Locale;
 
 import ssmg.vhbb_android.Constants.VitaDB;
 import ssmg.vhbb_android.R;
-import ssmg.vhbb_android.ui.MarqueeTextView;
-import ssmg.vhbb_android.ui.TrophyWebActivity;
+import ssmg.vhbb_android.ui.TrophyActivity;
 import ssmg.vhbb_android.Utils.DownloadUtils;
 
 public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHolder> {
@@ -53,8 +52,15 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
         String prefix = "";
         if (currentItem.getTrophies() > 0) prefix += "🏆 ";
         if (currentItem.getAI() > 0) prefix += "🛠 ";
-        holder.mTitle.setText(prefix + currentItem.getName() + " " + currentItem.getVersion());
 
+        if (!prefix.isEmpty()) {
+            holder.mPrefix.setVisibility(View.VISIBLE);
+            holder.mPrefix.setText(prefix.trim() + " ");
+        } else {
+            holder.mPrefix.setVisibility(View.GONE);
+        }
+
+        holder.mTitle.setText(currentItem.getName() + " " + currentItem.getVersion());
         holder.mAuthor.setText(currentItem.getAuthor());
         holder.mDescription.setText(currentItem.getDescription());
         holder.mDate.setText(String.format("(%s)", currentItem.getDateString()));
@@ -70,7 +76,7 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
         if (currentItem.getTrophies() > 0) {
             holder.mTrophies.setVisibility(View.VISIBLE);
             holder.mTrophies.setOnClickListener(v -> {
-                Intent i = new Intent(mActivity, TrophyWebActivity.class);
+                Intent i = new Intent(mActivity, TrophyActivity.class);
                 i.putExtra("TITLE_ID", currentItem.getTitleID());
                 i.putExtra("NAME", currentItem.getName());
                 mActivity.startActivity(i);
@@ -107,14 +113,14 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public MarqueeTextView mTitle, mAuthor;
-        public TextView mDescription, mDate, mDownloads;
+        public TextView mPrefix, mTitle, mAuthor, mDescription, mDate, mDownloads;
         public ImageButton mDownload, mDownloadData, mTrophies;
         public ImageView mIcon;
         public LinearLayout mContainer;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            mPrefix = itemView.findViewById(R.id.textview_prefix);
             mTitle = itemView.findViewById(R.id.textview_name);
             mAuthor = itemView.findViewById(R.id.textview_author);
             mDescription = itemView.findViewById(R.id.textview_desc);

@@ -80,7 +80,7 @@
                                 android:layout_marginLeft="8dp"
                                 android:fontFamily="monospace"
                                 android:textColor="@color/colorAccent"
-                                android:textSize="11sp"
+                                android:textSize="13sp"
                                 android:visibility="gone" />
 
                         </LinearLayout>

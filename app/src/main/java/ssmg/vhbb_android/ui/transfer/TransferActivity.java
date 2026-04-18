@@ -55,10 +55,9 @@ public class TransferActivity extends AppCompatActivity {
     private static final int FTP_PORT       = 1337;
     private static final String DEFAULT_REMOTE_PATH = "/ux0:data/";
 
-    private static final int REQ_FTP_FILE   = 1001;
-    private static final int REQ_FTP_FOLDER = 1002;
-    private static final int REQ_USB_FILE   = 1003;
-    private static final int REQ_USB_DEST   = 1004;
+    private static final int REQ_FTP_PICK = 1001;
+    private static final int REQ_USB_FILE = 1003;
+    private static final int REQ_USB_DEST = 1004;
 
     private final List<String> mSelectedFilePathsFtp = new ArrayList<>();
     private final List<String> mSelectedFileNamesFtp = new ArrayList<>();
@@ -130,8 +129,7 @@ public class TransferActivity extends AppCompatActivity {
         mFtpRemotePath.setText(DEFAULT_REMOTE_PATH);
 
         mFtpFileLabel.setOnClickListener(v -> toggleFileList());
-        findViewById(R.id.ftp_pick_file_btn).setOnClickListener(v -> launchBrowser(REQ_FTP_FILE, FileBrowserActivity.MODE_FILE));
-        findViewById(R.id.ftp_pick_folder_btn).setOnClickListener(v -> launchBrowser(REQ_FTP_FOLDER, FileBrowserActivity.MODE_FOLDER));
+        findViewById(R.id.ftp_pick_btn).setOnClickListener(v -> launchBrowser(REQ_FTP_PICK, FileBrowserActivity.MODE_FILE));
         mUsbPickFileBtn.setOnClickListener(v -> launchBrowser(REQ_USB_FILE, FileBrowserActivity.MODE_FILE));
         mUsbPickDestBtn.setOnClickListener(v -> launchBrowser(REQ_USB_DEST, FileBrowserActivity.MODE_FOLDER));
         mFtpTransferBtn.setOnClickListener(v -> startFtpTransfer());
@@ -163,16 +161,14 @@ public class TransferActivity extends AppCompatActivity {
         String path = data.getStringExtra(FileBrowserActivity.EXTRA_RESULT_PATH);
         if (path == null) return;
 
-        if (requestCode == REQ_FTP_FILE) {
-            File f = new File(path);
-            if (!mSelectedFilePathsFtp.contains(path)) {
+        if (requestCode == REQ_FTP_PICK) {
+            File selected = new File(path);
+            if (selected.isDirectory()) {
+                collectFilesFromDir(selected, "");
+            } else if (!mSelectedFilePathsFtp.contains(path)) {
                 mSelectedFilePathsFtp.add(path);
-                mSelectedFileNamesFtp.add(f.getName());
+                mSelectedFileNamesFtp.add(selected.getName());
             }
-            updateFtpFileLabel();
-            rebuildFileList();
-        } else if (requestCode == REQ_FTP_FOLDER) {
-            collectFilesFromDir(new File(path), "");
             updateFtpFileLabel();
             rebuildFileList();
         } else if (requestCode == REQ_USB_FILE) {

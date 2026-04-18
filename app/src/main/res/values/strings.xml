@@ -75,6 +75,7 @@
     <string name="transfer_usb_dest_label">Destination folder on Vita</string>
     <string name="transfer_pick_file">+ Files</string>
     <string name="transfer_pick_folder">+ Folder</string>
+    <string name="transfer_pick_btn">+ Browse</string>
     <string name="transfer_usb_pick_dest">Pick Folder</string>
     <string name="transfer_no_file_selected">No files selected</string>
     <string name="transfer_no_dest_selected">No destination selected</string>
@@ -104,4 +105,6 @@
     <string name="filebrowser_select_folder">Select This Folder</string>
     <string name="filebrowser_parent_dir">Parent directory</string>
     <string name="filebrowser_folder">Folder</string>
+    <string name="trophy_none">No trophies found for this title.</string>
+    <string name="trophy_error">Failed to load trophies.</string>
 </resources>

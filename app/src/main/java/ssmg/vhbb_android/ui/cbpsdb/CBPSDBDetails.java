@@ -111,21 +111,18 @@ public class CBPSDBDetails extends AppCompatActivity {
             OkHttpClient shieldsClient = new OkHttpClient.Builder()
                     .addInterceptor(chain -> {
                         okhttp3.Request req = chain.request();
-                        String host = req.url().host();
-                        if (host.contains("shields.io")) {
-                            String originalUrl = req.url().toString();
-                            String pngUrl;
-                            if (originalUrl.contains(".svg")) {
-                                pngUrl = originalUrl.replace(".svg", ".png");
-                            } else if (originalUrl.contains("?")) {
-                                pngUrl = originalUrl + "&format=png";
-                            } else {
-                                pngUrl = originalUrl + ".png";
-                            }
+                        String urlStr = req.url().toString();
+                        if (urlStr.contains(".svg")) {
+                            String pngUrl = urlStr.replace(".svg", ".png");
+                            req = req.newBuilder().url(pngUrl).build();
+                        } else if (req.url().host().contains("shields.io") && !urlStr.contains(".png")) {
+                            String pngUrl = urlStr.contains("?") ? urlStr + "&format=png" : urlStr + ".png";
                             req = req.newBuilder().url(pngUrl).build();
                         }
                         return chain.proceed(req);
                     })
+                    .followRedirects(true)
+                    .followSslRedirects(true)
                     .build();
 
             Picasso shieldsPicasso = new Picasso.Builder(this)

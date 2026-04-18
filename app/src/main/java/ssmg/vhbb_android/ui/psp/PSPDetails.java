@@ -102,19 +102,10 @@ public class PSPDetails extends AppCompatActivity {
 
         if (ScreenshotsUrl != null) {
             String firstUrl = ScreenshotsUrl[0];
-            if (firstUrl.endsWith(".mp4")) {
-                mScreenshot.setVisibility(View.GONE);
-                if (ScreenshotsUrl.length > 1) {
-                    sc_index = 1;
-                    cycleHandler.postDelayed(cycleRunnable, 0);
-                    mScreenshot.setVisibility(View.VISIBLE);
-                }
-            } else {
-                if (ScreenshotsUrl.length == 1) {
-                    Picasso.get().load(firstUrl).fit().centerInside().memoryPolicy(MemoryPolicy.NO_CACHE).into(mScreenshot);
-                } else {
-                    cycleHandler.postDelayed(cycleRunnable, 0);
-                }
+            if (ScreenshotsUrl.length == 1 && !firstUrl.endsWith(".mp4")) {
+                Picasso.get().load(firstUrl).fit().centerInside().memoryPolicy(MemoryPolicy.NO_CACHE).into(mScreenshot);
+            } else if (ScreenshotsUrl.length >= 1) {
+                cycleHandler.postDelayed(cycleRunnable, 0);
             }
             mScreenshot.setOnClickListener(v -> {
                 cycleHandler.removeCallbacks(cycleRunnable);

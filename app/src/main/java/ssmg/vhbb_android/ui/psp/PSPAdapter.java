@@ -22,7 +22,6 @@ import java.util.Locale;
 
 import ssmg.vhbb_android.Constants.PSP;
 import ssmg.vhbb_android.R;
-import ssmg.vhbb_android.ui.MarqueeTextView;
 import ssmg.vhbb_android.Utils.DownloadUtils;
 
 public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
@@ -48,8 +47,14 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PSPItem currentItem = mPSPList.get(position);
 
-        String prefix = currentItem.getAI() > 0 ? "🛠 " : "";
-        holder.mTitle.setText(prefix + currentItem.getName() + " " + currentItem.getVersion());
+        if (currentItem.getAI() > 0) {
+            holder.mPrefix.setVisibility(View.VISIBLE);
+            holder.mPrefix.setText("🛠 ");
+        } else {
+            holder.mPrefix.setVisibility(View.GONE);
+        }
+
+        holder.mTitle.setText(currentItem.getName() + " " + currentItem.getVersion());
         holder.mAuthor.setText(currentItem.getAuthor());
         holder.mDescription.setText(currentItem.getDescription());
         holder.mDate.setText(String.format("(%s)", currentItem.getDateString()));
@@ -80,14 +85,14 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public MarqueeTextView mTitle, mAuthor;
-        public TextView mDescription, mDate, mDownloads, mType;
+        public TextView mPrefix, mTitle, mAuthor, mDescription, mDate, mDownloads, mType;
         public ImageButton mDownload;
         public ImageView mIcon;
         public LinearLayout mContainer;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            mPrefix = itemView.findViewById(R.id.textview_prefix);
             mTitle = itemView.findViewById(R.id.textview_name);
             mAuthor = itemView.findViewById(R.id.textview_author);
             mDescription = itemView.findViewById(R.id.textview_desc);

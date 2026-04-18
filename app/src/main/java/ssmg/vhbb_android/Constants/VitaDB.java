@@ -33,6 +33,7 @@ public class VitaDB {
     public static final String PARENT_URL               = "https://www.rinnegatamante.eu/vitadb";
     public static final String HOMEBREW_LIST_JSON_URL   = String.format("%s/list_hbs_json.php", PARENT_URL);
     public static final String ACHIEVEMENTS_URL         = PARENT_URL + "/#/achievement/";
+    public static final String TROPHIES_JSON_URL        = PARENT_URL + "/list_hb_achievements_json.php?titleid=";
     public static final String PLUGIN_LIST_JSON_URL     = String.format("%s/list_plugins_json.php", PARENT_URL);
     public static final String INFO_PARENT_URL          = String.format("%s/#/info/", PARENT_URL);
     public static final String ICONS_PARENT_URL         = String.format("%s/icons/", PARENT_URL);

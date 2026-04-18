@@ -1,6 +1,9 @@
 package ssmg.vhbb_android.ui.transfer;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.MenuItem;
@@ -13,13 +16,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,10 +31,12 @@ import ssmg.vhbb_android.R;
 
 public class FileBrowserActivity extends AppCompatActivity {
 
-    public static final String EXTRA_MODE = "MODE";
+    public static final String EXTRA_MODE        = "MODE";
     public static final String EXTRA_RESULT_PATH = "RESULT_PATH";
-    public static final int MODE_FILE = 0;
-    public static final int MODE_FOLDER = 1;
+    public static final int MODE_FILE            = 0;
+    public static final int MODE_FOLDER          = 1;
+
+    private static final int PERM_CODE = 101;
 
     private int mMode;
     private File mCurrentDir;
@@ -67,11 +73,30 @@ public class FileBrowserActivity extends AppCompatActivity {
         mAdapter = new FileAdapter();
         rv.setAdapter(mAdapter);
 
-        mCurrentDir = Environment.getExternalStorageDirectory();
-        loadDirectory(mCurrentDir);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERM_CODE);
+        } else {
+            mCurrentDir = Environment.getExternalStorageDirectory();
+            loadDirectory(mCurrentDir);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERM_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            mCurrentDir = Environment.getExternalStorageDirectory();
+            loadDirectory(mCurrentDir);
+        } else {
+            finish();
+        }
     }
 
     private void loadDirectory(File dir) {
+        if (dir == null || !dir.isDirectory()) return;
         mCurrentDir = dir;
         mPathView.setText(dir.getAbsolutePath());
 
@@ -88,7 +113,7 @@ public class FileBrowserActivity extends AppCompatActivity {
             for (File f : files) {
                 if (f.getName().startsWith(".")) continue;
                 if (f.isDirectory()) dirs.add(f);
-                else if (mMode == MODE_FILE) fileList.add(f);
+                else fileList.add(f);
             }
             Collections.sort(dirs, (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
             Collections.sort(fileList, (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
@@ -108,18 +133,15 @@ public class FileBrowserActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
+        if (item.getItemId() == android.R.id.home) { onBackPressed(); return true; }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
-        if (mCurrentDir.getParentFile() != null &&
-                !mCurrentDir.equals(Environment.getExternalStorageDirectory().getParentFile())) {
-            loadDirectory(mCurrentDir.getParentFile());
+        File parent = mCurrentDir != null ? mCurrentDir.getParentFile() : null;
+        if (parent != null && !mCurrentDir.equals(Environment.getExternalStorageDirectory().getParentFile())) {
+            loadDirectory(parent);
         } else {
             super.onBackPressed();
         }
@@ -128,10 +150,8 @@ public class FileBrowserActivity extends AppCompatActivity {
     private static String formatSize(long bytes) {
         if (bytes <= 0) return "0 B";
         String[] units = {"B", "KB", "MB", "GB"};
-        int idx = (int) (Math.log10(bytes) / Math.log10(1024));
-        idx = Math.min(idx, units.length - 1);
-        double val = bytes / Math.pow(1024, idx);
-        return new DecimalFormat("#.##").format(val) + " " + units[idx];
+        int idx = Math.min((int)(Math.log10(bytes) / Math.log10(1024)), units.length - 1);
+        return new DecimalFormat("#.##").format(bytes / Math.pow(1024, idx)) + " " + units[idx];
     }
 
     private class FileAdapter extends RecyclerView.Adapter<FileAdapter.VH> {
@@ -160,9 +180,7 @@ public class FileBrowserActivity extends AppCompatActivity {
                 holder.mName.setText("..");
                 holder.mSize.setText(getString(R.string.filebrowser_parent_dir));
                 holder.mIcon.setImageResource(R.drawable.ic_folder_24dp);
-                holder.itemView.setOnClickListener(v -> {
-                    if (mParent != null) loadDirectory(mParent);
-                });
+                holder.itemView.setOnClickListener(v -> { if (mParent != null) loadDirectory(mParent); });
                 return;
             }
 
@@ -171,23 +189,32 @@ public class FileBrowserActivity extends AppCompatActivity {
             if (entry.isDirectory()) {
                 holder.mIcon.setImageResource(R.drawable.ic_folder_24dp);
                 holder.mSize.setText(getString(R.string.filebrowser_folder));
-                holder.itemView.setOnClickListener(v -> loadDirectory(entry));
+                holder.itemView.setOnClickListener(v -> {
+                    if (mMode == MODE_FOLDER) {
+                        holder.itemView.setOnLongClickListener(lv -> { returnResult(entry.getAbsolutePath()); return true; });
+                    }
+                    loadDirectory(entry);
+                });
+                if (mMode == MODE_FOLDER) {
+                    holder.itemView.setOnLongClickListener(v -> { returnResult(entry.getAbsolutePath()); return true; });
+                }
             } else {
                 holder.mIcon.setImageResource(android.R.drawable.ic_menu_save);
                 holder.mSize.setText(formatSize(entry.length()));
-                holder.itemView.setOnClickListener(v -> returnResult(entry.getAbsolutePath()));
+                if (mMode == MODE_FILE) {
+                    holder.itemView.setOnClickListener(v -> returnResult(entry.getAbsolutePath()));
+                } else {
+                    holder.itemView.setOnClickListener(null);
+                }
             }
         }
 
         @Override
-        public int getItemCount() {
-            return mEntries.size();
-        }
+        public int getItemCount() { return mEntries.size(); }
 
         class VH extends RecyclerView.ViewHolder {
             TextView mName, mSize;
             ImageView mIcon;
-
             VH(View v) {
                 super(v);
                 mName = v.findViewById(R.id.tv_file_name);

@@ -24,7 +24,7 @@ import com.squareup.picasso.Picasso;
 import ssmg.vhbb_android.R;
 import ssmg.vhbb_android.Utils.DownloadUtils;
 import ssmg.vhbb_android.ui.FullscreenImageActivity;
-import ssmg.vhbb_android.ui.TrophyWebActivity;
+import ssmg.vhbb_android.ui.TrophyActivity;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class HomebrewDetails extends AppCompatActivity {
@@ -113,7 +113,7 @@ public class HomebrewDetails extends AppCompatActivity {
         if (cItem.getTrophies() > 0) {
             mTrophies.setVisibility(View.VISIBLE);
             mTrophies.setOnClickListener(v -> {
-                Intent i = new Intent(this, TrophyWebActivity.class);
+                Intent i = new Intent(this, TrophyActivity.class);
                 i.putExtra("TITLE_ID", cItem.getTitleID());
                 i.putExtra("NAME", cItem.getName());
                 startActivity(i);
@@ -124,20 +124,10 @@ public class HomebrewDetails extends AppCompatActivity {
 
         if (ScreenshotsUrl != null) {
             String firstUrl = ScreenshotsUrl[0];
-            if (firstUrl.endsWith(".mp4")) {
-                mScreenshot.setVisibility(View.GONE);
-                mScreenshot.setOnClickListener(v -> openFullscreen(0));
-                if (ScreenshotsUrl.length > 1) {
-                    sc_index = 1;
-                    cycleHandler.postDelayed(cycleRunnable, 0);
-                    mScreenshot.setVisibility(View.VISIBLE);
-                }
-            } else {
-                if (ScreenshotsUrl.length == 1) {
-                    Picasso.get().load(firstUrl).fit().centerInside().memoryPolicy(MemoryPolicy.NO_CACHE).into(mScreenshot);
-                } else {
-                    cycleHandler.postDelayed(cycleRunnable, 0);
-                }
+            if (ScreenshotsUrl.length == 1 && !firstUrl.endsWith(".mp4")) {
+                Picasso.get().load(firstUrl).fit().centerInside().memoryPolicy(MemoryPolicy.NO_CACHE).into(mScreenshot);
+            } else if (ScreenshotsUrl.length >= 1) {
+                cycleHandler.postDelayed(cycleRunnable, 0);
             }
             mScreenshot.setOnClickListener(v -> {
                 cycleHandler.removeCallbacks(cycleRunnable);
