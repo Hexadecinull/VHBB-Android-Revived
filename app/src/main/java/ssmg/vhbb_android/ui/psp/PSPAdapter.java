@@ -55,6 +55,8 @@ public class PSPAdapter extends RecyclerView.Adapter<PSPAdapter.ViewHolder> {
         }
 
         holder.mTitle.setText(currentItem.getName() + " " + currentItem.getVersion());
+        holder.mTitle.setSelected(true);
+        holder.mAuthor.setSelected(true);
         holder.mAuthor.setText(currentItem.getAuthor());
         holder.mDescription.setText(currentItem.getDescription());
         holder.mDate.setText(String.format("(%s)", currentItem.getDateString()));
