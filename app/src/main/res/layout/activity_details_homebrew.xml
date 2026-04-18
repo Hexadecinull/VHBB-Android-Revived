@@ -274,39 +274,43 @@
 
             <ImageButton
                 android:id="@+id/qrCode"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_marginRight="2dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginRight="6dp"
                 android:background="@android:color/transparent"
-                android:padding="6dp"
+                android:scaleX="2"
+                android:scaleY="2"
                 android:src="@drawable/ic_qr_code_24dp" />
 
             <ImageButton
                 android:id="@+id/trophies"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_marginRight="2dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginRight="6dp"
                 android:background="@android:color/transparent"
-                android:padding="6dp"
+                android:scaleX="2"
+                android:scaleY="2"
                 android:src="@drawable/ic_trophy_24dp"
                 android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/downloadData"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_marginRight="2dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginRight="6dp"
                 android:background="@android:color/transparent"
-                android:padding="6dp"
+                android:scaleX="2"
+                android:scaleY="2"
                 android:src="@drawable/ic_download_data_circle_24dp"
                 android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/download"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:background="@android:color/transparent"
-                android:padding="6dp"
+                android:scaleX="2"
+                android:scaleY="2"
                 android:src="@drawable/ic_download_circle_24dp" />
 
         </LinearLayout>

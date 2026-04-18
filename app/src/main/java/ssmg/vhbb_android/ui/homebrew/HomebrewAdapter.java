@@ -60,8 +60,31 @@ public class HomebrewAdapter extends RecyclerView.Adapter<HomebrewAdapter.ViewHo
             holder.mPrefix.setVisibility(View.GONE);
         }
 
-        holder.mTitle.setText(currentItem.getName() + " " + currentItem.getVersion());
-        holder.mTitle.setSelected(true);
+        String titleText = currentItem.getName() + " " + currentItem.getVersion();
+        holder.mTitle.setText(titleText);
+        holder.mTitle.setSingleLine(false);
+        holder.mTitle.setHorizontallyScrolling(false);
+        holder.mTitle.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        androidx.core.widget.TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
+            holder.mTitle, 10, 15, 1, android.util.TypedValue.COMPLEX_UNIT_SP);
+        holder.mTitle.post(() -> {
+            android.text.Layout layout = holder.mTitle.getLayout();
+            if (layout == null) return;
+            boolean ellipsized = layout.getEllipsisCount(0) > 0;
+            if (ellipsized) {
+                androidx.core.widget.TextViewCompat.setAutoSizeTextTypeWithDefaults(
+                    holder.mTitle, androidx.core.widget.TextViewCompat.AUTO_SIZE_TEXT_TYPE_NONE);
+                holder.mTitle.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 15);
+                holder.mTitle.setSingleLine(true);
+                holder.mTitle.setHorizontallyScrolling(true);
+                holder.mTitle.setEllipsize(android.text.TextUtils.TruncateAt.MARQUEE);
+                holder.mTitle.setMarqueeRepeatLimit(-1);
+                holder.mTitle.setSelected(true);
+            } else {
+                holder.mTitle.setSingleLine(true);
+                holder.mTitle.setSelected(false);
+            }
+        });
         holder.mAuthor.setSelected(true);
         holder.mAuthor.setText(currentItem.getAuthor());
         holder.mDescription.setText(currentItem.getDescription());

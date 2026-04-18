@@ -112,21 +112,28 @@ public class CBPSDBDetails extends AppCompatActivity {
                     .addInterceptor(chain -> {
                         okhttp3.Request req = chain.request();
                         String urlStr = req.url().toString();
+                        String host = req.url().host();
+                        boolean isBadgeHost = host.contains("shields.io") || host.contains("badgen.net")
+                                || host.contains("badge.fury.io") || host.contains("codecov.io")
+                                || host.contains("travis-ci") || host.contains("appveyor")
+                                || host.contains("circleci") || host.contains("github.com") && urlStr.contains("badge");
                         if (urlStr.contains(".svg")) {
-                            String pngUrl = urlStr.replace(".svg", ".png");
-                            req = req.newBuilder().url(pngUrl).build();
-                        } else if (req.url().host().contains("shields.io") && !urlStr.contains(".png")) {
-                            String pngUrl = urlStr.contains("?") ? urlStr + "&format=png" : urlStr + ".png";
-                            req = req.newBuilder().url(pngUrl).build();
+                            req = req.newBuilder().url(urlStr.replace(".svg", ".png")).build();
+                        } else if (isBadgeHost) {
+                            String sep = urlStr.contains("?") ? "&" : "?";
+                            req = req.newBuilder().url(urlStr + sep + "style=flat&format=png").build();
                         }
                         return chain.proceed(req);
                     })
                     .followRedirects(true)
                     .followSslRedirects(true)
+                    .connectTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
+                    .readTimeout(15, java.util.concurrent.TimeUnit.SECONDS)
                     .build();
 
             Picasso shieldsPicasso = new Picasso.Builder(this)
                     .downloader(new com.squareup.picasso.OkHttp3Downloader(shieldsClient))
+                    .indicatorsEnabled(false)
                     .build();
 
             Markwon markwon = Markwon.builder(this)

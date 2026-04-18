@@ -3,9 +3,11 @@ package ssmg.vhbb_android.ui.transfer;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -36,7 +39,8 @@ public class FileBrowserActivity extends AppCompatActivity {
     public static final int MODE_FILE            = 0;
     public static final int MODE_FOLDER          = 1;
 
-    private static final int PERM_CODE = 101;
+    private static final int PERM_READ  = 101;
+    private static final int PERM_ALLFS = 102;
 
     private int mMode;
     private File mCurrentDir;
@@ -73,38 +77,72 @@ public class FileBrowserActivity extends AppCompatActivity {
         mAdapter = new FileAdapter();
         rv.setAdapter(mAdapter);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERM_CODE);
+        checkAndRequestPermissions();
+    }
+
+    private void checkAndRequestPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.filebrowser_perm_title)
+                        .setMessage(R.string.filebrowser_perm_message)
+                        .setPositiveButton(android.R.string.ok, (d, w) -> {
+                            Intent i = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                                    Uri.parse("package:" + getPackageName()));
+                            startActivityForResult(i, PERM_ALLFS);
+                        })
+                        .setNegativeButton(android.R.string.cancel, (d, w) -> finish())
+                        .show();
+            } else {
+                startBrowsing();
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERM_READ);
+            } else {
+                startBrowsing();
+            }
         } else {
-            mCurrentDir = Environment.getExternalStorageDirectory();
-            loadDirectory(mCurrentDir);
+            startBrowsing();
+        }
+    }
+
+    private void startBrowsing() {
+        mCurrentDir = Environment.getExternalStorageDirectory();
+        loadDirectory(mCurrentDir);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PERM_ALLFS) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Environment.isExternalStorageManager()) {
+                startBrowsing();
+            } else {
+                finish();
+            }
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERM_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            mCurrentDir = Environment.getExternalStorageDirectory();
-            loadDirectory(mCurrentDir);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] perms, @NonNull int[] grants) {
+        super.onRequestPermissionsResult(requestCode, perms, grants);
+        if (requestCode == PERM_READ && grants.length > 0 && grants[0] == PackageManager.PERMISSION_GRANTED) {
+            startBrowsing();
         } else {
             finish();
         }
     }
 
     private void loadDirectory(File dir) {
-        if (dir == null || !dir.isDirectory()) return;
+        if (dir == null || !dir.canRead()) return;
         mCurrentDir = dir;
         mPathView.setText(dir.getAbsolutePath());
 
         List<File> entries = new ArrayList<>();
-
-        if (dir.getParentFile() != null) {
-            entries.add(null);
-        }
+        if (dir.getParentFile() != null) entries.add(null);
 
         File[] files = dir.listFiles();
         if (files != null) {
@@ -118,16 +156,14 @@ public class FileBrowserActivity extends AppCompatActivity {
             Collections.sort(dirs, (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
             Collections.sort(fileList, (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
             entries.addAll(dirs);
-            entries.addAll(fileList);
+            if (mMode == MODE_FILE) entries.addAll(fileList);
         }
 
         mAdapter.setEntries(entries, dir.getParentFile());
     }
 
     private void returnResult(String path) {
-        Intent result = new Intent();
-        result.putExtra(EXTRA_RESULT_PATH, path);
-        setResult(RESULT_OK, result);
+        setResult(RESULT_OK, new Intent().putExtra(EXTRA_RESULT_PATH, path));
         finish();
     }
 
@@ -165,52 +201,48 @@ public class FileBrowserActivity extends AppCompatActivity {
             notifyDataSetChanged();
         }
 
-        @NonNull
-        @Override
+        @NonNull @Override
         public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View v = getLayoutInflater().inflate(R.layout.item_file_entry, parent, false);
-            return new VH(v);
+            return new VH(getLayoutInflater().inflate(R.layout.item_file_entry, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(@NonNull VH holder, int position) {
-            File entry = mEntries.get(position);
+        public void onBindViewHolder(@NonNull VH h, int pos) {
+            File entry = mEntries.get(pos);
 
             if (entry == null) {
-                holder.mName.setText("..");
-                holder.mSize.setText(getString(R.string.filebrowser_parent_dir));
-                holder.mIcon.setImageResource(R.drawable.ic_folder_24dp);
-                holder.itemView.setOnClickListener(v -> { if (mParent != null) loadDirectory(mParent); });
+                h.mName.setText("..");
+                h.mSize.setText(getString(R.string.filebrowser_parent_dir));
+                h.mIcon.setImageResource(R.drawable.ic_folder_24dp);
+                h.itemView.setOnClickListener(v -> { if (mParent != null) loadDirectory(mParent); });
+                h.itemView.setOnLongClickListener(null);
                 return;
             }
 
-            holder.mName.setText(entry.getName());
+            h.mName.setText(entry.getName());
 
             if (entry.isDirectory()) {
-                holder.mIcon.setImageResource(R.drawable.ic_folder_24dp);
-                holder.mSize.setText(getString(R.string.filebrowser_folder));
-                holder.itemView.setOnClickListener(v -> {
-                    if (mMode == MODE_FOLDER) {
-                        holder.itemView.setOnLongClickListener(lv -> { returnResult(entry.getAbsolutePath()); return true; });
-                    }
-                    loadDirectory(entry);
-                });
+                h.mIcon.setImageResource(R.drawable.ic_folder_24dp);
+                h.mSize.setText(getString(R.string.filebrowser_folder));
+                h.itemView.setOnClickListener(v -> loadDirectory(entry));
                 if (mMode == MODE_FOLDER) {
-                    holder.itemView.setOnLongClickListener(v -> { returnResult(entry.getAbsolutePath()); return true; });
+                    h.itemView.setOnLongClickListener(v -> { returnResult(entry.getAbsolutePath()); return true; });
+                } else {
+                    h.itemView.setOnLongClickListener(null);
                 }
             } else {
-                holder.mIcon.setImageResource(android.R.drawable.ic_menu_save);
-                holder.mSize.setText(formatSize(entry.length()));
+                h.mIcon.setImageResource(android.R.drawable.ic_menu_save);
+                h.mSize.setText(formatSize(entry.length()));
+                h.itemView.setOnLongClickListener(null);
                 if (mMode == MODE_FILE) {
-                    holder.itemView.setOnClickListener(v -> returnResult(entry.getAbsolutePath()));
+                    h.itemView.setOnClickListener(v -> returnResult(entry.getAbsolutePath()));
                 } else {
-                    holder.itemView.setOnClickListener(null);
+                    h.itemView.setOnClickListener(null);
                 }
             }
         }
 
-        @Override
-        public int getItemCount() { return mEntries.size(); }
+        @Override public int getItemCount() { return mEntries.size(); }
 
         class VH extends RecyclerView.ViewHolder {
             TextView mName, mSize;

@@ -107,4 +107,6 @@
     <string name="filebrowser_folder">Folder</string>
     <string name="trophy_none">No trophies found for this title.</string>
     <string name="trophy_error">Failed to load trophies.</string>
+    <string name="filebrowser_perm_title">Storage Permission Required</string>
+    <string name="filebrowser_perm_message">This app needs access to all files to browse and transfer content to your PS Vita. Please grant permission in the next screen.</string>
 </resources>

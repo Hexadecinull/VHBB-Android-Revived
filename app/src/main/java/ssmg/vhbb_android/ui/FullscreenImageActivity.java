@@ -7,6 +7,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -71,6 +72,7 @@ public class FullscreenImageActivity extends AppCompatActivity {
 
     private void stopVideo() {
         if (mVideo.isPlaying()) mVideo.stopPlayback();
+        mVideo.setVideoURI(null);
     }
 
     private void loadCurrent() {
@@ -80,11 +82,22 @@ public class FullscreenImageActivity extends AppCompatActivity {
         if (isVideo(url)) {
             mImage.setVisibility(View.GONE);
             mVideo.setVisibility(View.VISIBLE);
+            mVideo.requestFocus();
             mVideo.setVideoURI(Uri.parse(url));
             mVideo.setOnPreparedListener(mp -> {
                 mp.setLooping(true);
+                mp.setVolume(1f, 1f);
                 mVideo.start();
             });
+            mVideo.setOnErrorListener((mp, what, extra) -> {
+                mVideo.setVisibility(View.GONE);
+                mImage.setVisibility(View.VISIBLE);
+                android.widget.Toast.makeText(this,
+                    "Video playback failed (" + what + "/" + extra + ")",
+                    android.widget.Toast.LENGTH_SHORT).show();
+                return true;
+            });
+            mVideo.setOnInfoListener((mp, what, extra) -> false);
         } else {
             mVideo.setVisibility(View.GONE);
             mImage.setVisibility(View.VISIBLE);
