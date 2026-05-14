@@ -37,7 +37,8 @@ public class VitaDB {
     public static final String PLUGIN_LIST_JSON_URL     = String.format("%s/list_plugins_json.php", PARENT_URL);
     public static final String INFO_PARENT_URL          = String.format("%s/#/info/", PARENT_URL);
     public static final String ICONS_PARENT_URL         = String.format("%s/icons/", PARENT_URL);
-    public static final String TRAILER_PARENT_URL       = PARENT_URL + "/trailers/";
+    /** Must match VitaDB server paths (see {@code videos/} on site; {@code trailers/} returns 404). */
+    public static final String TRAILER_PARENT_URL       = PARENT_URL + "/videos/";
 
     public static final String UA_REQUEST_HEADER        = "User-Agent";
     public static final String UA_REQUEST_VALUE         = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36";

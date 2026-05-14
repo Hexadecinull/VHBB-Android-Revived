@@ -30,6 +30,6 @@ public class PSP {
     public static final String PARENT_URL             = "https://www.rinnegatamante.eu/vitadb";
     public static final String PSP_LIST_JSON_URL      = PARENT_URL + "/list_psp_hbs_json.php";
     public static final String ICONS_PARENT_URL       = PARENT_URL + "/icons/";
-    public static final String TRAILER_PARENT_URL     = PARENT_URL + "/trailers/";
+    public static final String TRAILER_PARENT_URL     = PARENT_URL + "/videos/";
 
 }

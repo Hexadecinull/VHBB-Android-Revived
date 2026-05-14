@@ -54,7 +54,10 @@ public class HomebrewItem extends BaseItem {
         }
 
         if (!trailer.isEmpty() && !trailer.equals("0")) {
-            String trailerUrlFull = VitaDB.TRAILER_PARENT_URL + trailer + ".mp4";
+            String trailerUrlFull = trailer.startsWith("http://") || trailer.startsWith("https://")
+                    ? trailer
+                    : VitaDB.TRAILER_PARENT_URL + trailer
+                    + (trailer.toLowerCase().endsWith(".mp4") ? "" : ".mp4");
             if (imageUrls != null) {
                 String[] combined = new String[imageUrls.length + 1];
                 System.arraycopy(imageUrls, 0, combined, 0, imageUrls.length);

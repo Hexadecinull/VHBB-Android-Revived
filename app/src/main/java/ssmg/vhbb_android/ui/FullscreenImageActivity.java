@@ -67,7 +67,13 @@ public class FullscreenImageActivity extends AppCompatActivity {
     }
 
     private boolean isVideo(String url) {
-        return url != null && url.toLowerCase().endsWith(".mp4");
+        if (url == null) return false;
+        String s = url.toLowerCase();
+        int q = s.indexOf('?');
+        if (q > 0) s = s.substring(0, q);
+        int h = s.indexOf('#');
+        if (h > 0) s = s.substring(0, h);
+        return s.endsWith(".mp4");
     }
 
     private void stopVideo() {

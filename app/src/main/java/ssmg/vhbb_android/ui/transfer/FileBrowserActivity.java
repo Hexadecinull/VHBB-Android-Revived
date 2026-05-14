@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ssmg.vhbb_android.R;
+import ssmg.vhbb_android.Utils.ToolbarInsetsHelper;
 
 public class FileBrowserActivity extends AppCompatActivity {
 
@@ -63,6 +64,8 @@ public class FileBrowserActivity extends AppCompatActivity {
                     ? getString(R.string.filebrowser_pick_folder)
                     : getString(R.string.filebrowser_pick_file));
         }
+
+        ToolbarInsetsHelper.padToolbarBelowStatusBarAndCutout(this, toolbar);
 
         mPathView = findViewById(R.id.tv_current_path);
         mSelectFolderBtn = findViewById(R.id.btn_select_folder);

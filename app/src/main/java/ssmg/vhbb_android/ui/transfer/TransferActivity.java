@@ -45,6 +45,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import ssmg.vhbb_android.R;
+import ssmg.vhbb_android.Utils.ToolbarInsetsHelper;
 
 public class TransferActivity extends AppCompatActivity {
 
@@ -104,9 +105,7 @@ public class TransferActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(R.string.menu_transfer);
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary, getTheme()));
-        }
+        ToolbarInsetsHelper.padToolbarBelowStatusBarAndCutout(this, toolbar);
 
         mFtpIpInput         = findViewById(R.id.ftp_ip_input);
         mFtpRemotePath      = findViewById(R.id.ftp_remote_path);
